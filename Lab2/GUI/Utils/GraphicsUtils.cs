@@ -1,8 +1,5 @@
 ﻿using GUI.Models;
-using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Text;
 
 namespace GUI.Utils
 {
@@ -19,7 +16,7 @@ namespace GUI.Utils
 
         public static void DrawSection(this Graphics g, Pen pen, Section section)
         {
-           g.DrawLine(pen, section.A, section.B);
+            g.DrawLine(pen, section.A.GetDrawingPoint(), section.B.GetDrawingPoint());
         }
     }
 }

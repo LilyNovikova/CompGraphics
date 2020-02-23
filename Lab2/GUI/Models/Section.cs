@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace GUI.Models
 {
@@ -17,7 +15,7 @@ namespace GUI.Models
 
         public Point3 GetBezierPoint(double t)
         {
-            if(t > 1 || t< 0)
+            if (t > 1 || t < 0)
             {
                 throw new ArgumentException("Need 0 < t < 1");
             }
