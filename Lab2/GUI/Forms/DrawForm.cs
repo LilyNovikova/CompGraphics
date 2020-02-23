@@ -1,9 +1,11 @@
 ﻿using GUI.Models;
 using GUI.Utils;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
@@ -12,6 +14,7 @@ namespace GUI.Forms
 {
     public partial class DrawForm : Form
     {
+        private const string pointsFilename = "data.txt";
         private const int pointRadius = 2;
         private int count;
         private BezierCurve curve;
@@ -26,7 +29,7 @@ namespace GUI.Forms
             InitializeComponent();
             count = 0;
             curvePoints = new List<Point3>();
-            points = new List<Point3>
+            /*points = new List<Point3>
             {
                 new Point3(21*2,74*2,30),
                 new Point3(5*2,6*2,30),
@@ -35,10 +38,11 @@ namespace GUI.Forms
                 new Point3(176*2,17*2,30),
                 new Point3(189*2, 124*2,30),
                 new Point3(226*2,67*2,30)
-            };
+            };*/
+            points = GetSavedPoints();
             curve = new BezierCurve();
             curve.AddPoints(points);
-
+            //SavePoints();
             curvePoints.Clear();
             tolerance = 0.001;
             t = 0;
@@ -65,16 +69,17 @@ namespace GUI.Forms
             isSlowDrawSelected = BtflCbx.Checked;
             if (isSlowDrawSelected)
             {
-                points = new List<Point3>
-            {
-                new Point3(21*2,74*2,30),
-                new Point3(5*2,6*2,30),
-                new Point3(101*2,5*2,30),
-                new Point3(139*2, 74*2,30),
-                new Point3(176*2,17*2,30),
-                new Point3(189*2, 124*2,30),
-                new Point3(226*2,67*2,30)
-            };
+                /*points = new List<Point3>
+                {
+                    new Point3(21*2,74*2,30),
+                    new Point3(5*2,6*2,30),
+                    new Point3(101*2,5*2,30),
+                    new Point3(139*2, 74*2,30),
+                    new Point3(176*2,17*2,30),
+                    new Point3(189*2, 124*2,30),
+                    new Point3(226*2,67*2,30)
+                };*/
+                points = GetSavedPoints();
                 curve = new BezierCurve();
                 curve.AddPoints(points);
 
@@ -151,7 +156,7 @@ namespace GUI.Forms
             {
                 g.DrawLines(Pens.Black, curvePoints.Select(p => p.GetDrawingPoint()).ToArray());
             }
-            //Thread.Sleep(100);
+            Thread.Sleep(10);
         }
 
         private void DrawCurveStep(List<List<Point3>> subpoints, Graphics g)
@@ -168,6 +173,21 @@ namespace GUI.Forms
                 g.DrawLines(GetPen(colorIndex), points.Select(p => p.GetDrawingPoint()).ToArray());
                 colorIndex++;
             }
+            g.FillEllipse(Brushes.Black, subpoints.Last().First().GetDrawingPoint(), pointRadius*2);
+        }
+
+        private void SavePoints()
+        {
+            var pStr = JsonConvert.SerializeObject(points).Replace("},", "},\n");
+            var writer = File.CreateText(pointsFilename);
+            writer.WriteLine(pStr);
+            writer.Close();
+        }
+
+        private List<Point3> GetSavedPoints()
+        {
+            var pStr = File.ReadAllText(pointsFilename);
+            return JsonConvert.DeserializeObject<List<Point3>>(pStr);
         }
     }
 }

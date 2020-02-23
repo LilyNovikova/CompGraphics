@@ -1,14 +1,20 @@
 ﻿using System;
 using System.Drawing;
+using Newtonsoft.Json;
 
 namespace GUI.Models
 {
+    [Serializable]
     public class Point3
     {
+        [JsonProperty("X")]
         public double X { get; private set; }
+        [JsonProperty("Y")]
         public double Y { get; private set; }
+        [JsonProperty("Z")]
         public double Z { get; private set; }
 
+        [JsonConstructor]
         public Point3(double x, double y, double z = 0)
         {
             X = x;
