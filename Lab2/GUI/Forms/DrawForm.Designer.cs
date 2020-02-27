@@ -37,6 +37,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
+            this.ResetAngleBtn = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.Canvas)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.XTurnTrb)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.YTurnTrb)).BeginInit();
@@ -59,7 +60,7 @@
             // 
             this.PaintBtn.Location = new System.Drawing.Point(37, 12);
             this.PaintBtn.Name = "PaintBtn";
-            this.PaintBtn.Size = new System.Drawing.Size(186, 43);
+            this.PaintBtn.Size = new System.Drawing.Size(127, 43);
             this.PaintBtn.TabIndex = 1;
             this.PaintBtn.Text = "Paint";
             this.PaintBtn.UseVisualStyleBackColor = true;
@@ -132,11 +133,22 @@
             this.label3.TabIndex = 8;
             this.label3.Text = "Z";
             // 
+            // ResetAngleBtn
+            // 
+            this.ResetAngleBtn.Location = new System.Drawing.Point(187, 13);
+            this.ResetAngleBtn.Name = "ResetAngleBtn";
+            this.ResetAngleBtn.Size = new System.Drawing.Size(126, 42);
+            this.ResetAngleBtn.TabIndex = 9;
+            this.ResetAngleBtn.Text = "Reset angle";
+            this.ResetAngleBtn.UseVisualStyleBackColor = true;
+            this.ResetAngleBtn.Click += new System.EventHandler(this.ResetAngleBtn_Click);
+            // 
             // DrawForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(955, 790);
+            this.Controls.Add(this.ResetAngleBtn);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
@@ -147,7 +159,7 @@
             this.Controls.Add(this.PaintBtn);
             this.Controls.Add(this.Canvas);
             this.Name = "DrawForm";
-            this.Text = "Form1";
+            this.Text = "DrawForm";
             this.Load += new System.EventHandler(this.DrawForm_Load);
             this.ResizeEnd += new System.EventHandler(this.DrawForm_ResizeEnd);
             ((System.ComponentModel.ISupportInitialize)(this.Canvas)).EndInit();
@@ -170,6 +182,7 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Button ResetAngleBtn;
     }
 }
 

@@ -11,6 +11,7 @@ namespace GUI.Models
     {
         private int scrHeight;
         private int scrWidth;
+        private double scale = 0.2;
 
         private readonly Point3 startXEdge;
         private readonly Point3 startYEdge;
@@ -27,32 +28,41 @@ namespace GUI.Models
             scrWidth = screenWidth;
 
             Center = new Point3(0, 0, 0);
-            startXEdge = new Point3(scrWidth / 2, 0, 0);
-            startYEdge = new Point3(0, scrHeight / 2, 0);
-            startZEdge = new Point3(0, 0, scrWidth / 2);
+            startXEdge = new Point3(scrWidth / 2 * scale, 0, 0);
+            startYEdge = new Point3(0, scrHeight / 2 * scale, 0);
+            startZEdge = new Point3(0, 0, scrWidth / 2 * scale);
             XEdge = startXEdge;
             YEdge = startYEdge;
             ZEdge = startZEdge;
         }
 
-        public void Turn(Point3.Axes axis, double angle)
+        public void Turn(double angleX = 0, double angleY = 0, double angleZ = 0)
         {
-            XEdge = startXEdge.TurnAroundAxis(axis, angle);
-            YEdge = startYEdge.TurnAroundAxis(axis, angle);
-            ZEdge = startZEdge.TurnAroundAxis(axis, angle);
+            XEdge = startXEdge.TurnAroundAxis(Point3.Axes.X, angleX);
+            YEdge = startYEdge.TurnAroundAxis(Point3.Axes.X, angleX);
+            ZEdge = startZEdge.TurnAroundAxis(Point3.Axes.X, angleX);
+            XEdge = XEdge.TurnAroundAxis(Point3.Axes.Y, angleY);
+            YEdge = YEdge.TurnAroundAxis(Point3.Axes.Y, angleY);
+            ZEdge = ZEdge.TurnAroundAxis(Point3.Axes.Y, angleY);
+            XEdge = XEdge.TurnAroundAxis(Point3.Axes.Z, angleZ);
+            YEdge = YEdge.TurnAroundAxis(Point3.Axes.Z, angleZ);
+            ZEdge = ZEdge.TurnAroundAxis(Point3.Axes.Z, angleZ);
         }
 
         public void Draw(Graphics g, Pen pen, Brush brush, Font font, int offset)
         {
             var center = Center.GetDrawingPoint(scrWidth, scrHeight);
+            var gPen = new Pen(Brushes.Green, 2);
+            var bPen = new Pen(Brushes.Blue, 2);
+            var mPen = new Pen(Brushes.DarkMagenta, 2);
             //X
-            g.DrawLine(pen, center, XEdge.GetDrawingPoint(scrWidth, scrHeight));
+            g.DrawLine(gPen, center, XEdge.GetDrawingPoint(scrWidth, scrHeight));
             g.DrawString("X", font, brush, new Point3(XEdge.X - offset, XEdge.Y, XEdge.Z).GetDrawingPoint(scrWidth, scrHeight));
             //Y
-            g.DrawLine(pen, YEdge.GetDrawingPoint(scrWidth, scrHeight), center);
-            g.DrawString("Y", font, brush, scrWidth / 2, 0);
+            g.DrawLine(bPen, YEdge.GetDrawingPoint(scrWidth, scrHeight), center);
+            g.DrawString("Y", font, brush, new Point3(YEdge.X, YEdge.Y - offset, YEdge.Z).GetDrawingPoint(scrWidth, scrHeight));
             //Z
-            g.DrawLine(pen, center, ZEdge.GetDrawingPoint(scrWidth, scrHeight));
+            g.DrawLine(mPen, center, ZEdge.GetDrawingPoint(scrWidth, scrHeight));
             g.DrawString("Z", font, brush, new Point3(ZEdge.X, ZEdge.Y, ZEdge.Z - offset).GetDrawingPoint(scrWidth, scrHeight));
         }
     }

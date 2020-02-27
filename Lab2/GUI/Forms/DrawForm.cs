@@ -139,25 +139,26 @@ namespace GUI.Forms
             }
             var projection = (curvePoints as IEnumerable<Point3>).GetProjection(field.Width, field.Height);
             g.DrawLines(GetPen(count), projection.ToArray());
-            count++;
+            //count++;
         }
 
         private void DrawCurveSlow(double t, Graphics g, Rectangle field)
         {
+            ResetAngleBtn_Click(this, new EventArgs());
             DrawAxes(g, field);
             curvePoints.Add(curve.GetBezierPoint(t));
 
             //draw main points
             foreach (Point3 p in points)
             {
-                g.FillEllipse(Brushes.Black, p.GetDrawingPoint(), pointRadius);
-                g.DrawString($"{points.IndexOf(p)}", SystemFonts.CaptionFont, Brushes.Black, p.GetDrawingPoint());
+                g.FillEllipse(Brushes.Black, p.GetDrawingPoint(field.Width, field.Height), pointRadius);
+                g.DrawString($"{points.IndexOf(p)}", SystemFonts.CaptionFont, Brushes.Black, p.GetDrawingPoint(field.Width, field.Height));
             }
 
             DrawCurveStep(curve.Subpoints, g, field);
             if (curvePoints.Count != 1)
             {
-                g.DrawLines(new Pen(Brushes.Black, 2), curvePoints.Select(p => p.GetDrawingPoint()).ToArray());
+                g.DrawLines(new Pen(Brushes.Black, 2), curvePoints.Select(p => p.GetDrawingPoint(field.Width, field.Height)).ToArray());
             }
             //Thread.Sleep(5);
         }
@@ -196,41 +197,33 @@ namespace GUI.Forms
 
         private void XTurnTrb_Scroll(object sender, EventArgs e)
         {
-            TurnView(Point3.Axes.X);
+            TurnView();
         }
 
         private void YTurnTrb_Scroll(object sender, EventArgs e)
         {
-            TurnView(Point3.Axes.Y);
+            TurnView();
         }
 
         private void ZTurnTrb_Scroll(object sender, EventArgs e)
         {
-            TurnView(Point3.Axes.Z);
+            TurnView();
         }
 
-        private void TurnView(Point3.Axes axis)
+        private void TurnView()
         {
-            int angle = 0;
-            switch(axis)
-            {
-                case Point3.Axes.X:
-                    angle = XTurnTrb.Value;
-                    currentXAngle = angle;
-                    break;
-                case Point3.Axes.Y:
-                    angle = YTurnTrb.Value;
-                    currentYAngle = angle;
-                    break;
-                case Point3.Axes.Z:
-                    angle = ZTurnTrb.Value;
-                    currentZAngle = angle;
-                    break;
-            }
-            var radAngle = MathUtils.GradToRad(angle);
-            coordinates.Turn(axis, radAngle);
+            var angleX = MathUtils.GradToRad(XTurnTrb.Value);
+            var angleY = MathUtils.GradToRad(YTurnTrb.Value);
+            var angleZ = MathUtils.GradToRad(ZTurnTrb.Value);
+
+            coordinates.Turn(angleX, angleY, angleZ);
+
             var p = startPoints as IEnumerable<Point3>;
-            points = p.TurnObject(axis, radAngle).ToList();
+            p = p.TurnObject(Point3.Axes.X, angleX);
+            p = p.TurnObject(Point3.Axes.Y, angleY);
+            p = p.TurnObject(Point3.Axes.Z, angleZ);
+            points = p.ToList();
+
             Canvas.Refresh();
         }
 
@@ -249,6 +242,16 @@ namespace GUI.Forms
             YTurnTrb_Scroll(sender, e);
             ZTurnTrb_Scroll(sender, e);
             Canvas.Refresh();
+        }
+
+        private void ResetAngleBtn_Click(object sender, EventArgs e)
+        {
+            XTurnTrb.Value = 0;
+            YTurnTrb.Value = 0;
+            ZTurnTrb.Value = 0;
+            XTurnTrb_Scroll(sender, e);
+            YTurnTrb_Scroll(sender, e);
+            ZTurnTrb_Scroll(sender, e);
         }
     }
 }
