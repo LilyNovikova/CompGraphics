@@ -2,6 +2,7 @@
 using GUI.Utils;
 using Newtonsoft.Json;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
@@ -18,7 +19,7 @@ namespace GUI.Forms
         private const int pointRadius = 2;
         private int count;
         private BezierCurve curve;
-        private double tolerance;
+        private double tolerance = 0.0005;
         private List<Point3> curvePoints;
         private List<Point3> points;
         private double t;
@@ -31,24 +32,23 @@ namespace GUI.Forms
             curvePoints = new List<Point3>();
             /*points = new List<Point3>
             {
-                new Point3(21*2,74*2,30),
-                new Point3(5*2,6*2,30),
-                new Point3(101*2,5*2,30),
-                new Point3(139*2, 74*2,30),
-                new Point3(176*2,17*2,30),
-                new Point3(189*2, 124*2,30),
-                new Point3(226*2,67*2,30)
+                new Point3(21 * 3,74 * 3,30),
+                new Point3(5 * 3,6 * 3,30),
+                new Point3(101 * 3,5 * 3,30),
+                new Point3(139 * 3, 74 * 3,30),
+                new Point3(176 * 3,17 * 3,30),
+                new Point3(189 * 3, 124 * 3,30),
+                new Point3(226 * 3,67 * 3,30)
             };*/
             points = GetSavedPoints();
             curve = new BezierCurve();
             curve.AddPoints(points);
             //SavePoints();
             curvePoints.Clear();
-            tolerance = 0.001;
             t = 0;
         }
 
-        private void Form1_Load(object sender, EventArgs e)
+        private void DrawForm_Load(object sender, EventArgs e)
         {
         }
 
@@ -56,11 +56,11 @@ namespace GUI.Forms
         {
             if (isSlowDrawSelected)
             {
-                DrawCurveSlow(t, e.Graphics);
+                DrawCurveSlow(t, e.Graphics, e.ClipRectangle);
             }
             else
             {
-                DrawCurve(points, e.Graphics);
+                DrawCurve(points, e.Graphics, e.ClipRectangle);
             }
         }
 
@@ -69,22 +69,10 @@ namespace GUI.Forms
             isSlowDrawSelected = BtflCbx.Checked;
             if (isSlowDrawSelected)
             {
-                /*points = new List<Point3>
-                {
-                    new Point3(21*2,74*2,30),
-                    new Point3(5*2,6*2,30),
-                    new Point3(101*2,5*2,30),
-                    new Point3(139*2, 74*2,30),
-                    new Point3(176*2,17*2,30),
-                    new Point3(189*2, 124*2,30),
-                    new Point3(226*2,67*2,30)
-                };*/
-                points = GetSavedPoints();
                 curve = new BezierCurve();
                 curve.AddPoints(points);
 
                 curvePoints.Clear();
-                tolerance = 0.001;
                 t = 0;
                 for (; t <= 1; t += tolerance)
                 {
@@ -123,7 +111,7 @@ namespace GUI.Forms
             }
         }
 
-        private void DrawCurve(List<Point3> points, Graphics g)
+        private void DrawCurve(List<Point3> points, Graphics g, Rectangle field)
         {
             var curve = new BezierCurve();
             curve.AddPoints(points);
@@ -135,12 +123,12 @@ namespace GUI.Forms
                 g.FillEllipse(Brushes.Black, p.GetDrawingPoint(), pointRadius);
                 g.DrawString($"{points.IndexOf(p)}", SystemFonts.CaptionFont, Brushes.Black, p.GetDrawingPoint());
             }
-
-            g.DrawLines(GetPen(count), curvePoints.Select(p => p.GetDrawingPoint()).ToArray());
+            var projection = (curvePoints as IEnumerable<Point3>).GetProjection(field.Width, field.Height);
+            g.DrawLines(GetPen(count), projection.ToArray());
             count++;
         }
 
-        private void DrawCurveSlow(double t, Graphics g)
+        private void DrawCurveSlow(double t, Graphics g, Rectangle field)
         {
             curvePoints.Add(curve.GetBezierPoint(t));
 
@@ -151,15 +139,15 @@ namespace GUI.Forms
                 g.DrawString($"{points.IndexOf(p)}", SystemFonts.CaptionFont, Brushes.Black, p.GetDrawingPoint());
             }
 
-            DrawCurveStep(curve.Subpoints, g);
+            DrawCurveStep(curve.Subpoints, g,field);
             if (curvePoints.Count != 1)
             {
-                g.DrawLines(Pens.Black, curvePoints.Select(p => p.GetDrawingPoint()).ToArray());
+                g.DrawLines(new Pen(Brushes.Black, 2), curvePoints.Select(p => p.GetDrawingPoint()).ToArray());
             }
-            Thread.Sleep(10);
+            //Thread.Sleep(5);
         }
 
-        private void DrawCurveStep(List<List<Point3>> subpoints, Graphics g)
+        private void DrawCurveStep(List<List<Point3>> subpoints, Graphics g, Rectangle field)
         {
             var colorIndex = 0;
             for (int i = 0; i < subpoints.Count - 1; i++)
@@ -170,10 +158,11 @@ namespace GUI.Forms
                     g.FillEllipse(Brushes.Black, p.GetDrawingPoint(), pointRadius);
                     g.DrawString($"{subpoints.IndexOf(points)}:{points.IndexOf(p)}", SystemFonts.CaptionFont, Brushes.Black, p.GetDrawingPoint());
                 }
-                g.DrawLines(GetPen(colorIndex), points.Select(p => p.GetDrawingPoint()).ToArray());
+                var projection = (points as IEnumerable<Point3>).GetProjection(field.Width, field.Height);
+                g.DrawLines(GetPen(colorIndex), projection.ToArray());
                 colorIndex++;
             }
-            g.FillEllipse(Brushes.Black, subpoints.Last().First().GetDrawingPoint(), pointRadius*2);
+            g.FillEllipse(Brushes.Black, subpoints.Last().First().GetDrawingPoint(field.Width, field.Height), pointRadius * 2);
         }
 
         private void SavePoints()
@@ -188,6 +177,37 @@ namespace GUI.Forms
         {
             var pStr = File.ReadAllText(pointsFilename);
             return JsonConvert.DeserializeObject<List<Point3>>(pStr);
+        }
+
+        private void XTurnTrb_Scroll(object sender, EventArgs e)
+        {
+            var p = points as IEnumerable<Point3>;
+            var angle = MathUtils.GradToRad(XTurnTrb.Value);
+            points = p.TurnObject(Point3.Axes.X, angle).ToList();
+            Canvas.Refresh();
+        }
+
+        private void YTurnTrb_Scroll(object sender, EventArgs e)
+        {
+            var p = points as IEnumerable<Point3>;
+            var angle = MathUtils.GradToRad(XTurnTrb.Value);
+            points = p.TurnObject(Point3.Axes.Y, angle).ToList();
+            Canvas.Refresh();
+        }
+
+        private void ZTurnTrb_Scroll(object sender, EventArgs e)
+        {
+            var p = points as IEnumerable<Point3>;
+            var angle = MathUtils.GradToRad(XTurnTrb.Value);
+            points = p.TurnObject(Point3.Axes.Z, angle).ToList();
+            Canvas.Refresh();
+        }
+
+        private void DrawAxes(Graphics g, Rectangle field)
+        {
+            var h = field.Height;
+            var w = field.Width;
+
         }
     }
 }

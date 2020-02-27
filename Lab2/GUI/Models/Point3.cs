@@ -1,12 +1,21 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using Newtonsoft.Json;
+using System.Linq;
 
 namespace GUI.Models
 {
     [Serializable]
     public class Point3
     {
+        public enum Axes
+        {
+            X,
+            Y,
+            Z
+        }
+
         [JsonProperty("X")]
         public double X { get; private set; }
         [JsonProperty("Y")]
@@ -24,9 +33,12 @@ namespace GUI.Models
 
         public Point3(int x, int y, int z = 0) : this((double)x, (double)y, (double)z) { }
 
-        public Point GetDrawingPoint()
+        public Point GetDrawingPoint(int screenWidth = 0, int screenHeight = 0)
         {
-            return new Point((int)Math.Round(X), (int)Math.Round(Y));
+            return new Point(
+                screenWidth / 2 + GetPlainXCoordinate(),
+                screenHeight / 2 + GetPlainYCoordinate()
+                );
         }
 
         public static Point3 operator *(double alpha, Point3 point)
@@ -45,6 +57,42 @@ namespace GUI.Models
                 point1.Y + point2.Y,
                 point1.Z + point2.Z
                 );
+        }
+
+        public Point3 TurnAroundAxis(Axes axis, double angle)
+        {
+            switch (axis)
+            {
+                case Axes.X:
+                    return new Point3(
+                        X,
+                        Y * (Math.Cos(angle) + Math.Sin(angle)),
+                        Z * (Math.Cos(angle) - Math.Sin(angle))
+                        );
+                case Axes.Y:
+                    return new Point3(
+                        X * (Math.Cos(angle) - Math.Sin(angle)),
+                        Y,
+                        Z * (Math.Cos(angle) + Math.Sin(angle))
+                        );
+                case Axes.Z:
+                    return new Point3(
+                        X * (Math.Cos(angle) + Math.Sin(angle)),
+                        Y * (Math.Cos(angle) + Math.Sin(angle)),
+                        Z
+                        );
+                default:
+                    throw new ArgumentException($"Unknown argument '{axis}' in turning method");
+            }
+        }
+
+        private int GetPlainXCoordinate()
+        {
+            return (int)Math.Round(Math.Sin(Math.PI / 3) * (X + Z));
+        }
+        private int GetPlainYCoordinate()
+        {
+            return (int)Math.Round(-Y + Math.Cos(Math.PI / 3) * (X - Z));
         }
     }
 }
