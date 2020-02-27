@@ -88,11 +88,11 @@ namespace GUI.Models
 
         private int GetPlainXCoordinate()
         {
-            return (int)Math.Round(Math.Sin(Math.PI / 3) * (X + Z));
+            return (int)Math.Round(Math.Sin(Math.PI / 3) * (X - Z));
         }
         private int GetPlainYCoordinate()
         {
-            return (int)Math.Round(-Y + Math.Cos(Math.PI / 3) * (X - Z));
+            return (int)Math.Round(-Y + Math.Cos(Math.PI / 3) * (X + Z));
         }
     }
 }

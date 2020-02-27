@@ -55,6 +55,7 @@
     <Compile Include="Forms\DrawForm.Designer.cs">
       <DependentUpon>DrawForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Models\Coordinates3D.cs" />
     <Compile Include="Models\BezierCurve.cs" />
     <Compile Include="Models\Point3.cs" />
     <Compile Include="Models\Section.cs" />

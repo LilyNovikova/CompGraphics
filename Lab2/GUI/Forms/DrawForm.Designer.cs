@@ -149,6 +149,7 @@
             this.Name = "DrawForm";
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.DrawForm_Load);
+            this.ResizeEnd += new System.EventHandler(this.DrawForm_ResizeEnd);
             ((System.ComponentModel.ISupportInitialize)(this.Canvas)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.XTurnTrb)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.YTurnTrb)).EndInit();

@@ -16,31 +16,43 @@ namespace GUI.Forms
     public partial class DrawForm : Form
     {
         private const string pointsFilename = "data.txt";
+        private const int axesWidth = 2;
+        private const int axesNameOffset = 10;
         private const int pointRadius = 2;
         private int count;
         private BezierCurve curve;
         private double tolerance = 0.0005;
         private List<Point3> curvePoints;
         private List<Point3> points;
+        private readonly List<Point3> startPoints;
         private double t;
         private bool isSlowDrawSelected;
+        private Coordinates3D coordinates;
+        private int currentXAngle;
+        private int currentYAngle;
+        private int currentZAngle;
 
         public DrawForm()
         {
             InitializeComponent();
             count = 0;
             curvePoints = new List<Point3>();
-            /*points = new List<Point3>
+            startPoints = new List<Point3>
             {
-                new Point3(21 * 3,74 * 3,30),
-                new Point3(5 * 3,6 * 3,30),
-                new Point3(101 * 3,5 * 3,30),
-                new Point3(139 * 3, 74 * 3,30),
-                new Point3(176 * 3,17 * 3,30),
-                new Point3(189 * 3, 124 * 3,30),
-                new Point3(226 * 3,67 * 3,30)
-            };*/
-            points = GetSavedPoints();
+                new Point3(21  ,74  ,-100),
+                new Point3(5  ,6  ,-50),
+                new Point3(101  ,5  ,-10),
+                new Point3(139  , 74  ,0),
+                new Point3(176  ,17  ,30),
+                new Point3(189  , 124  ,80),
+                new Point3(226  ,67  ,150)
+            };
+            points = startPoints;
+            //points = GetSavedPoints();
+            coordinates = new Coordinates3D(Canvas.Size.Width, Canvas.Size.Height);
+            currentXAngle = 0;
+            currentYAngle = 0;
+            currentZAngle = 0;
             curve = new BezierCurve();
             curve.AddPoints(points);
             //SavePoints();
@@ -54,13 +66,14 @@ namespace GUI.Forms
 
         private void Canvas_Paint(object sender, PaintEventArgs e)
         {
+            var rect = new Rectangle(Canvas.Location.X, Canvas.Location.Y, Canvas.Size.Width, Canvas.Size.Height);
             if (isSlowDrawSelected)
             {
-                DrawCurveSlow(t, e.Graphics, e.ClipRectangle);
+                DrawCurveSlow(t, e.Graphics, rect);
             }
             else
             {
-                DrawCurve(points, e.Graphics, e.ClipRectangle);
+                DrawCurve(points, e.Graphics, rect);
             }
         }
 
@@ -113,6 +126,7 @@ namespace GUI.Forms
 
         private void DrawCurve(List<Point3> points, Graphics g, Rectangle field)
         {
+            DrawAxes(g, field);
             var curve = new BezierCurve();
             curve.AddPoints(points);
 
@@ -120,8 +134,8 @@ namespace GUI.Forms
 
             foreach (Point3 p in points)
             {
-                g.FillEllipse(Brushes.Black, p.GetDrawingPoint(), pointRadius);
-                g.DrawString($"{points.IndexOf(p)}", SystemFonts.CaptionFont, Brushes.Black, p.GetDrawingPoint());
+                g.FillEllipse(Brushes.Black, p.GetDrawingPoint(field.Width, field.Height), pointRadius);
+                g.DrawString($"{points.IndexOf(p)}", SystemFonts.CaptionFont, Brushes.Black, p.GetDrawingPoint(field.Width, field.Height));
             }
             var projection = (curvePoints as IEnumerable<Point3>).GetProjection(field.Width, field.Height);
             g.DrawLines(GetPen(count), projection.ToArray());
@@ -130,6 +144,7 @@ namespace GUI.Forms
 
         private void DrawCurveSlow(double t, Graphics g, Rectangle field)
         {
+            DrawAxes(g, field);
             curvePoints.Add(curve.GetBezierPoint(t));
 
             //draw main points
@@ -139,7 +154,7 @@ namespace GUI.Forms
                 g.DrawString($"{points.IndexOf(p)}", SystemFonts.CaptionFont, Brushes.Black, p.GetDrawingPoint());
             }
 
-            DrawCurveStep(curve.Subpoints, g,field);
+            DrawCurveStep(curve.Subpoints, g, field);
             if (curvePoints.Count != 1)
             {
                 g.DrawLines(new Pen(Brushes.Black, 2), curvePoints.Select(p => p.GetDrawingPoint()).ToArray());
@@ -181,33 +196,59 @@ namespace GUI.Forms
 
         private void XTurnTrb_Scroll(object sender, EventArgs e)
         {
-            var p = points as IEnumerable<Point3>;
-            var angle = MathUtils.GradToRad(XTurnTrb.Value);
-            points = p.TurnObject(Point3.Axes.X, angle).ToList();
-            Canvas.Refresh();
+            TurnView(Point3.Axes.X);
         }
 
         private void YTurnTrb_Scroll(object sender, EventArgs e)
         {
-            var p = points as IEnumerable<Point3>;
-            var angle = MathUtils.GradToRad(XTurnTrb.Value);
-            points = p.TurnObject(Point3.Axes.Y, angle).ToList();
-            Canvas.Refresh();
+            TurnView(Point3.Axes.Y);
         }
 
         private void ZTurnTrb_Scroll(object sender, EventArgs e)
         {
-            var p = points as IEnumerable<Point3>;
-            var angle = MathUtils.GradToRad(XTurnTrb.Value);
-            points = p.TurnObject(Point3.Axes.Z, angle).ToList();
+            TurnView(Point3.Axes.Z);
+        }
+
+        private void TurnView(Point3.Axes axis)
+        {
+            int angle = 0;
+            switch(axis)
+            {
+                case Point3.Axes.X:
+                    angle = XTurnTrb.Value;
+                    currentXAngle = angle;
+                    break;
+                case Point3.Axes.Y:
+                    angle = YTurnTrb.Value;
+                    currentYAngle = angle;
+                    break;
+                case Point3.Axes.Z:
+                    angle = ZTurnTrb.Value;
+                    currentZAngle = angle;
+                    break;
+            }
+            var radAngle = MathUtils.GradToRad(angle);
+            coordinates.Turn(axis, radAngle);
+            var p = startPoints as IEnumerable<Point3>;
+            points = p.TurnObject(axis, radAngle).ToList();
             Canvas.Refresh();
         }
 
         private void DrawAxes(Graphics g, Rectangle field)
         {
-            var h = field.Height;
-            var w = field.Width;
+            var brush = Brushes.Black;
+            var font = SystemFonts.CaptionFont;
+            var pen = new Pen(Brushes.DimGray, axesWidth);
+            coordinates.Draw(g, pen, brush, font, axesNameOffset);
+        }
 
+        private void DrawForm_ResizeEnd(object sender, EventArgs e)
+        {
+            coordinates = new Coordinates3D(Canvas.Width, Canvas.Height);
+            XTurnTrb_Scroll(sender, e);
+            YTurnTrb_Scroll(sender, e);
+            ZTurnTrb_Scroll(sender, e);
+            Canvas.Refresh();
         }
     }
 }
