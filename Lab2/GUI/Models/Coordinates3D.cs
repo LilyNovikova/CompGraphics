@@ -11,7 +11,8 @@ namespace GUI.Models
     {
         private int scrHeight;
         private int scrWidth;
-        private double scale = 0.2;
+        private const double scale = 1;
+        private const int vectorLenght = 100;
 
         private readonly Point3 startXEdge;
         private readonly Point3 startYEdge;
@@ -28,9 +29,10 @@ namespace GUI.Models
             scrWidth = screenWidth;
 
             Center = new Point3(0, 0, 0);
-            startXEdge = new Point3(scrWidth / 2 * scale, 0, 0);
-            startYEdge = new Point3(0, scrHeight / 2 * scale, 0);
-            startZEdge = new Point3(0, 0, scrWidth / 2 * scale);
+            startXEdge = new Point3(vectorLenght, 0, 0);
+            startYEdge = new Point3(0, vectorLenght, 0);
+            //startZEdge = new Point3(0, 0, scrWidth / 2 * scale);
+            startZEdge = new Point3(0, 0, vectorLenght);
             XEdge = startXEdge;
             YEdge = startYEdge;
             ZEdge = startZEdge;

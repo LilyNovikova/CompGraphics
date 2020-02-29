@@ -33,6 +33,11 @@ namespace GUI.Models
 
         public Point3(int x, int y, int z = 0) : this((double)x, (double)y, (double)z) { }
 
+        public override string ToString()
+        {
+            return $"X: {(int)Math.Round(X)}, Y: {(int)Math.Round(Y)}, Z: {(int)Math.Round(Z)}";
+        }
+
         public Point GetDrawingPoint(int screenWidth = 0, int screenHeight = 0)
         {
             return new Point(
@@ -61,24 +66,26 @@ namespace GUI.Models
 
         public Point3 TurnAroundAxis(Axes axis, double angle)
         {
+            var c = Math.Cos(angle);
+            var s = Math.Sin(angle);
             switch (axis)
             {
                 case Axes.X:
                     return new Point3(
                         X,
-                        Y * (Math.Cos(angle) + Math.Sin(angle)),
-                        Z * (Math.Cos(angle) - Math.Sin(angle))
+                        Y * c + Z * s,
+                        Z * c - Y * s
                         );
                 case Axes.Y:
                     return new Point3(
-                        X * (Math.Cos(angle) - Math.Sin(angle)),
+                        X * c - Z * s,
                         Y,
-                        Z * (Math.Cos(angle) + Math.Sin(angle))
+                        X * s + Z * c
                         );
                 case Axes.Z:
                     return new Point3(
-                        X * (Math.Cos(angle) + Math.Sin(angle)),
-                        Y * (Math.Cos(angle) + Math.Sin(angle)),
+                        X * c + Y * s,
+                        Y * c - X * s,
                         Z
                         );
                 default:

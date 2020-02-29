@@ -38,10 +38,16 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.ResetAngleBtn = new System.Windows.Forms.Button();
+            this.XUdn = new System.Windows.Forms.NumericUpDown();
+            this.ZUdn = new System.Windows.Forms.NumericUpDown();
+            this.YUdn = new System.Windows.Forms.NumericUpDown();
             ((System.ComponentModel.ISupportInitialize)(this.Canvas)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.XTurnTrb)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.YTurnTrb)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ZTurnTrb)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.XUdn)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ZUdn)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.YUdn)).BeginInit();
             this.SuspendLayout();
             // 
             // Canvas
@@ -51,7 +57,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.Canvas.Location = new System.Drawing.Point(12, 177);
             this.Canvas.Name = "Canvas";
-            this.Canvas.Size = new System.Drawing.Size(931, 601);
+            this.Canvas.Size = new System.Drawing.Size(1115, 601);
             this.Canvas.TabIndex = 0;
             this.Canvas.TabStop = false;
             this.Canvas.Paint += new System.Windows.Forms.PaintEventHandler(this.Canvas_Paint);
@@ -78,7 +84,7 @@
             // 
             // XTurnTrb
             // 
-            this.XTurnTrb.Location = new System.Drawing.Point(563, 12);
+            this.XTurnTrb.Location = new System.Drawing.Point(738, 13);
             this.XTurnTrb.Maximum = 180;
             this.XTurnTrb.Minimum = -180;
             this.XTurnTrb.Name = "XTurnTrb";
@@ -88,7 +94,7 @@
             // 
             // YTurnTrb
             // 
-            this.YTurnTrb.Location = new System.Drawing.Point(83, 102);
+            this.YTurnTrb.Location = new System.Drawing.Point(166, 102);
             this.YTurnTrb.Maximum = 180;
             this.YTurnTrb.Minimum = -180;
             this.YTurnTrb.Name = "YTurnTrb";
@@ -98,7 +104,7 @@
             // 
             // ZTurnTrb
             // 
-            this.ZTurnTrb.Location = new System.Drawing.Point(563, 102);
+            this.ZTurnTrb.Location = new System.Drawing.Point(738, 102);
             this.ZTurnTrb.Maximum = 180;
             this.ZTurnTrb.Minimum = -180;
             this.ZTurnTrb.Name = "ZTurnTrb";
@@ -109,7 +115,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(505, 23);
+            this.label1.Location = new System.Drawing.Point(570, 21);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(17, 17);
             this.label1.TabIndex = 6;
@@ -127,7 +133,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(505, 102);
+            this.label3.Location = new System.Drawing.Point(570, 114);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(17, 17);
             this.label3.TabIndex = 8;
@@ -143,11 +149,68 @@
             this.ResetAngleBtn.UseVisualStyleBackColor = true;
             this.ResetAngleBtn.Click += new System.EventHandler(this.ResetAngleBtn_Click);
             // 
+            // XUdn
+            // 
+            this.XUdn.Location = new System.Drawing.Point(612, 21);
+            this.XUdn.Maximum = new decimal(new int[] {
+            180,
+            0,
+            0,
+            0});
+            this.XUdn.Minimum = new decimal(new int[] {
+            180,
+            0,
+            0,
+            -2147483648});
+            this.XUdn.Name = "XUdn";
+            this.XUdn.Size = new System.Drawing.Size(120, 22);
+            this.XUdn.TabIndex = 10;
+            this.XUdn.ValueChanged += new System.EventHandler(this.XUdn_ValueChanged);
+            // 
+            // ZUdn
+            // 
+            this.ZUdn.Location = new System.Drawing.Point(612, 112);
+            this.ZUdn.Maximum = new decimal(new int[] {
+            180,
+            0,
+            0,
+            0});
+            this.ZUdn.Minimum = new decimal(new int[] {
+            180,
+            0,
+            0,
+            -2147483648});
+            this.ZUdn.Name = "ZUdn";
+            this.ZUdn.Size = new System.Drawing.Size(120, 22);
+            this.ZUdn.TabIndex = 11;
+            this.ZUdn.ValueChanged += new System.EventHandler(this.ZUdn_ValueChanged);
+            // 
+            // YUdn
+            // 
+            this.YUdn.Location = new System.Drawing.Point(57, 112);
+            this.YUdn.Maximum = new decimal(new int[] {
+            180,
+            0,
+            0,
+            0});
+            this.YUdn.Minimum = new decimal(new int[] {
+            180,
+            0,
+            0,
+            -2147483648});
+            this.YUdn.Name = "YUdn";
+            this.YUdn.Size = new System.Drawing.Size(120, 22);
+            this.YUdn.TabIndex = 12;
+            this.YUdn.ValueChanged += new System.EventHandler(this.YUdn_ValueChanged);
+            // 
             // DrawForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(955, 790);
+            this.ClientSize = new System.Drawing.Size(1139, 790);
+            this.Controls.Add(this.YUdn);
+            this.Controls.Add(this.ZUdn);
+            this.Controls.Add(this.XUdn);
             this.Controls.Add(this.ResetAngleBtn);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
@@ -166,6 +229,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.XTurnTrb)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.YTurnTrb)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ZTurnTrb)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.XUdn)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ZUdn)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.YUdn)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -183,6 +249,9 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Button ResetAngleBtn;
+        private System.Windows.Forms.NumericUpDown XUdn;
+        private System.Windows.Forms.NumericUpDown ZUdn;
+        private System.Windows.Forms.NumericUpDown YUdn;
     }
 }
 
