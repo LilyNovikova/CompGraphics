@@ -41,6 +41,8 @@
             this.XUdn = new System.Windows.Forms.NumericUpDown();
             this.ZUdn = new System.Windows.Forms.NumericUpDown();
             this.YUdn = new System.Windows.Forms.NumericUpDown();
+            this.inputFileCmb = new System.Windows.Forms.ComboBox();
+            this.label4 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.Canvas)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.XTurnTrb)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.YTurnTrb)).BeginInit();
@@ -75,7 +77,7 @@
             // BtflCbx
             // 
             this.BtflCbx.AutoSize = true;
-            this.BtflCbx.Location = new System.Drawing.Point(345, 23);
+            this.BtflCbx.Location = new System.Drawing.Point(37, 66);
             this.BtflCbx.Name = "BtflCbx";
             this.BtflCbx.Size = new System.Drawing.Size(118, 21);
             this.BtflCbx.TabIndex = 2;
@@ -203,11 +205,35 @@
             this.YUdn.TabIndex = 12;
             this.YUdn.ValueChanged += new System.EventHandler(this.YUdn_ValueChanged);
             // 
+            // inputFileCmb
+            // 
+            this.inputFileCmb.FormattingEnabled = true;
+            this.inputFileCmb.Items.AddRange(new object[] {
+            "4points.txt",
+            "6points.txt",
+            "0points.txt"});
+            this.inputFileCmb.Location = new System.Drawing.Point(419, 22);
+            this.inputFileCmb.Name = "inputFileCmb";
+            this.inputFileCmb.Size = new System.Drawing.Size(92, 24);
+            this.inputFileCmb.TabIndex = 13;
+            this.inputFileCmb.SelectedIndexChanged += new System.EventHandler(this.inputFileCmb_SelectedIndexChanged);
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(342, 23);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(65, 17);
+            this.label4.TabIndex = 14;
+            this.label4.Text = "Input file:";
+            // 
             // DrawForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1139, 790);
+            this.Controls.Add(this.label4);
+            this.Controls.Add(this.inputFileCmb);
             this.Controls.Add(this.YUdn);
             this.Controls.Add(this.ZUdn);
             this.Controls.Add(this.XUdn);
@@ -252,6 +278,8 @@
         private System.Windows.Forms.NumericUpDown XUdn;
         private System.Windows.Forms.NumericUpDown ZUdn;
         private System.Windows.Forms.NumericUpDown YUdn;
+        private System.Windows.Forms.ComboBox inputFileCmb;
+        private System.Windows.Forms.Label label4;
     }
 }
 

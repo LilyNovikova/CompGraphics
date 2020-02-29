@@ -15,7 +15,8 @@ namespace GUI.Forms
 {
     public partial class DrawForm : Form
     {
-        private const string pointsFilename = "data.txt";
+        private string pointsFilename = "4points.txt";
+        private const string pointsFilePath = "Resources\\";
         private const int axesWidth = 2;
         private const int axesNameOffset = 10;
         private const int pointRadius = 2;
@@ -23,7 +24,7 @@ namespace GUI.Forms
         private double tolerance = 0.005;
         private List<Point3> curvePoints;
         private List<Point3> points;
-        private readonly List<Point3> startPoints;
+        private List<Point3> startPoints;
         private double t;
         private bool isSlowDrawSelected;
         private Coordinates3D coordinates;
@@ -32,7 +33,20 @@ namespace GUI.Forms
         public DrawForm()
         {
             InitializeComponent();
+            inputFileCmb.SelectedItem = inputFileCmb.Items[0];
             curvePoints = new List<Point3>();
+            SetPoints();
+            coordinates = new Coordinates3D(Canvas.Size.Width, Canvas.Size.Height);
+            curve = new BezierCurve();
+            curve.AddPoints(points);
+            SavePoints(pointsFilename);
+            curvePoints.Clear();
+            t = 0;
+        }
+        private void SetPoints()
+        {
+            pointsFilename = pointsFilePath + inputFileCmb.SelectedItem.ToString();
+            startPoints = GetSavedPoints(pointsFilename);
             /* startPoints = new List<Point3>
              {
                  new Point3(21  ,74  ,-100),
@@ -43,14 +57,7 @@ namespace GUI.Forms
                  new Point3(189  , 124  ,80),
                  new Point3(226  ,67  ,150)
              };*/
-            startPoints = GetSavedPoints(pointsFilename);
             points = startPoints;
-            coordinates = new Coordinates3D(Canvas.Size.Width, Canvas.Size.Height);
-            curve = new BezierCurve();
-            curve.AddPoints(points);
-            SavePoints(pointsFilename);
-            curvePoints.Clear();
-            t = 0;
         }
 
         private void DrawForm_Load(object sender, EventArgs e)
@@ -76,7 +83,6 @@ namespace GUI.Forms
             isPaintBtnClicked = true;
             if (isSlowDrawSelected)
             {
-                //ResetAngleBtn_Click(this, new EventArgs());
                 curve = new BezierCurve();
                 curve.AddPoints(points);
 
@@ -284,6 +290,15 @@ namespace GUI.Forms
         {
             ZTurnTrb.Value = (int)ZUdn.Value;
             ZTurnTrb_Scroll(sender, e);
+        }
+
+        private void inputFileCmb_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            SetPoints();
+            XTurnTrb.Value = 0;
+            YTurnTrb.Value = 0;
+            ZTurnTrb.Value = 0;
+            DrawForm_ResizeEnd(sender, e);
         }
     }
 }
