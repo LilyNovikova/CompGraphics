@@ -67,13 +67,14 @@ namespace GUI.Forms
         private void Canvas_Paint(object sender, PaintEventArgs e)
         {
             var rect = new Rectangle(Canvas.Location.X, Canvas.Location.Y, Canvas.Size.Width, Canvas.Size.Height);
-            if (isSlowDrawSelected)
-            {
-                DrawCurveSlow(t, e.Graphics, rect);
-            }
-            else
+
+            if (!isSlowDrawSelected || (!isPaintBtnClicked && isSlowDrawSelected))
             {
                 DrawCurve(points, e.Graphics, rect);
+            }
+            else if(isSlowDrawSelected)
+            {
+                DrawCurveSlow(t, e.Graphics, rect);
             }
         }
 
