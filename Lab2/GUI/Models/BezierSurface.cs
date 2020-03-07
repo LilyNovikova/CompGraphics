@@ -50,7 +50,7 @@ namespace GUI.Models
                         var point = new Point3(pointI.X, pointJ.Y, coordZ);
                         newRow.Add(point);
 
-                        if(Subpoints[k].Count == 2 && Subpoints[k][i].Count > 2)
+                        if (Subpoints[k].Count == 2 && Subpoints[k][i].Count > 2)
                         {
                             newRow.Add(point);
                         }
