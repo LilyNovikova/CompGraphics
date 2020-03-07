@@ -43,6 +43,42 @@ namespace GUI.Forms
             curvePoints.Clear();
             t = 0;
         }
+
+        private List<List<Point3>> GetSurfacePoints()
+        {
+            return new List<List<Point3>>
+            {
+                new List<Point3>
+                {
+                    new Point3(150, 0, 150),
+                    new Point3(150, 50, 150),
+                    new Point3(150, 100, 150),
+                    new Point3(150, 150, 150)
+                },
+                new List<Point3>
+                {
+                    new Point3(100, 0, 100),
+                    new Point3(100, 50, 100),
+                    new Point3(100, 100, 100),
+                    new Point3(100, 150, 100)
+                },
+                new List<Point3>
+                {
+                    new Point3(50, 0, 50),
+                    new Point3(50, 50, 50),
+                    new Point3(50, 100, 50),
+                    new Point3(50, 150, 50)
+                },
+                new List<Point3>
+                {
+                    new Point3(0, 0, 0),
+                    new Point3(0, 50, 0),
+                    new Point3(0, 100, 0),
+                    new Point3(0, 150, 0)
+                }
+            };
+        }
+
         private void SetPoints()
         {
             pointsFilename = pointsFilePath + inputFileCmb.SelectedItem.ToString();
@@ -72,7 +108,7 @@ namespace GUI.Forms
             {
                 DrawCurve(points, e.Graphics, rect);
             }
-            else if(isSlowDrawSelected)
+            else if (isSlowDrawSelected)
             {
                 DrawCurveSlow(t, e.Graphics, rect);
             }
