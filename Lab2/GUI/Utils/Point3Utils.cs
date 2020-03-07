@@ -15,9 +15,20 @@ namespace GUI.Utils
             return points.Select(point => point.TurnAroundAxis(axis, angle));
         }
 
-        public static IEnumerable<Point> GetProjection(this IEnumerable<Point3> points, int screenWidth = 0, int screenHeight = 0)
+        public static IEnumerable<Point> GetCurveProjection(this IEnumerable<Point3> points, int screenWidth = 0, int screenHeight = 0)
         {
             return points.Select(point => point.GetDrawingPoint(screenWidth, screenHeight));
+        }
+
+        public static IEnumerable<IEnumerable<Point>> GetObjectProjection(this IEnumerable<IEnumerable<Point3>> points, int screenWidth = 0, int screenHeight = 0)
+        {
+            return points.
+                Select(
+                row => row
+                .Select(
+                    point => point.GetDrawingPoint(screenWidth, screenHeight)
+                    )
+                );
         }
     }
 }

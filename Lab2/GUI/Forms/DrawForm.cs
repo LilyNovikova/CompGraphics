@@ -140,7 +140,7 @@ namespace GUI.Forms
                 g.FillEllipse(Brushes.Black, p.GetDrawingPoint(field.Width, field.Height), pointRadius);
                 g.DrawString($"{points.IndexOf(p)}", SystemFonts.CaptionFont, Brushes.Black, p.GetDrawingPoint(field.Width, field.Height));
             }
-            var projection = (curvePoints as IEnumerable<Point3>).GetProjection(field.Width, field.Height);
+            var projection = (curvePoints as IEnumerable<Point3>).GetCurveProjection(field.Width, field.Height);
             g.DrawLines(Pens.Red, projection.ToArray());
         }
 
@@ -177,7 +177,7 @@ namespace GUI.Forms
                     g.FillEllipse(Brushes.Black, p.GetDrawingPoint(field.Width, field.Height), pointRadius);
                     g.DrawString($"{subpoints.IndexOf(points)}:{points.IndexOf(p)}", SystemFonts.CaptionFont, Brushes.Black, p.GetDrawingPoint(field.Width, field.Height));
                 }
-                var projection = (points as IEnumerable<Point3>).GetProjection(field.Width, field.Height);
+                var projection = (points as IEnumerable<Point3>).GetCurveProjection(field.Width, field.Height);
                 g.DrawLines(GetPen(colorIndex), projection.ToArray());
                 colorIndex++;
             }
