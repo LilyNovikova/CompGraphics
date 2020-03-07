@@ -49,8 +49,17 @@ namespace GUI.Models
                         var coordZ = u / (v + u) * pointI.Z + v / (v + u) * pointJ.Z;
                         var point = new Point3(pointI.X, pointJ.Y, coordZ);
                         newRow.Add(point);
+
+                        if(Subpoints[k].Count == 2 && Subpoints[k][i].Count > 2)
+                        {
+                            newRow.Add(point);
+                        }
                     }
                     newLevel.Add(newRow);
+                    if (Subpoints[k].Count > 2 && Subpoints[k][i].Count == 2)
+                    {
+                        newLevel.Add(newRow);
+                    }
                 }
                 Subpoints.Add(newLevel);
             }
