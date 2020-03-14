@@ -30,7 +30,6 @@
         {
             this.Canvas = new System.Windows.Forms.PictureBox();
             this.PaintBtn = new System.Windows.Forms.Button();
-            this.BtflCbx = new System.Windows.Forms.CheckBox();
             this.XTurnTrb = new System.Windows.Forms.TrackBar();
             this.YTurnTrb = new System.Windows.Forms.TrackBar();
             this.ZTurnTrb = new System.Windows.Forms.TrackBar();
@@ -73,16 +72,6 @@
             this.PaintBtn.Text = "Paint";
             this.PaintBtn.UseVisualStyleBackColor = true;
             this.PaintBtn.Click += new System.EventHandler(this.PaintBtn_Click);
-            // 
-            // BtflCbx
-            // 
-            this.BtflCbx.AutoSize = true;
-            this.BtflCbx.Location = new System.Drawing.Point(37, 66);
-            this.BtflCbx.Name = "BtflCbx";
-            this.BtflCbx.Size = new System.Drawing.Size(118, 21);
-            this.BtflCbx.TabIndex = 2;
-            this.BtflCbx.Text = "beautiful draw";
-            this.BtflCbx.UseVisualStyleBackColor = true;
             // 
             // XTurnTrb
             // 
@@ -244,7 +233,6 @@
             this.Controls.Add(this.ZTurnTrb);
             this.Controls.Add(this.YTurnTrb);
             this.Controls.Add(this.XTurnTrb);
-            this.Controls.Add(this.BtflCbx);
             this.Controls.Add(this.PaintBtn);
             this.Controls.Add(this.Canvas);
             this.Name = "DrawForm";
@@ -267,7 +255,6 @@
 
         private System.Windows.Forms.PictureBox Canvas;
         private System.Windows.Forms.Button PaintBtn;
-        private System.Windows.Forms.CheckBox BtflCbx;
         private System.Windows.Forms.TrackBar XTurnTrb;
         private System.Windows.Forms.TrackBar YTurnTrb;
         private System.Windows.Forms.TrackBar ZTurnTrb;

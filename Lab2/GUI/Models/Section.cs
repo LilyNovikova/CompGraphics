@@ -15,11 +15,6 @@ namespace GUI.Models
 
         public Point3 GetBezierPoint(double t)
         {
-            if (t > 1 || t < 0)
-            {
-                throw new ArgumentException("Need 0 < t < 1");
-            }
-
             return (1 - t) * A + t * B;
         }
     }

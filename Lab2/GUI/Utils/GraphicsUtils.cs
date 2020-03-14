@@ -16,6 +16,25 @@ namespace GUI.Utils
             g.FillEllipse(brush, center.X - radius, center.Y - radius, radius * 2, radius * 2);
         }
 
+        public static void DrawPoints(this Graphics g, Brush brush, Point[] centers, int radius)
+        {
+            foreach (Point p in centers)
+            {
+                g.FillEllipse(brush, p.X - radius, p.Y - radius, radius * 2, radius * 2);
+            }
+        }
+
+        public static void DrawPoints(this Graphics g, Brush brush, Point[][] centers, int radius)
+        {
+            foreach (Point[] row in centers)
+            {
+                foreach (Point p in row)
+                {
+                    g.FillEllipse(brush, p.X - radius, p.Y - radius, radius * 2, radius * 2);
+                }
+            }
+        }
+
         public static void DrawSection(this Graphics g, Pen pen, Section section)
         {
             g.DrawLine(pen, section.A.GetDrawingPoint(), section.B.GetDrawingPoint());
@@ -25,12 +44,12 @@ namespace GUI.Utils
         {
             var pointArray = points.Select(row => row.ToArray()).ToArray();
             var rowLength = pointArray[0].Length;
-            for(int i = 0; i < rowLength; i++)
+            for (int i = 0; i < rowLength; i++)
             {
                 var column = pointArray.Select(row => row[i]).ToArray();
                 g.DrawLines(pen, column);
             }
-            foreach(Point[] row in pointArray)
+            foreach (Point[] row in pointArray)
             {
                 g.DrawLines(pen, row);
             }
