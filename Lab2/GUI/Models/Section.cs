@@ -15,7 +15,6 @@ namespace GUI.Models
 
         public double Length => A.Distance(B);
 
-
         public Point3 GetBezierPoint(double t)
         {
             return (1 - t) * A + t * B;
@@ -45,18 +44,19 @@ namespace GUI.Models
                 * section2.Length;
         }
 
-        public Section GetNormal2D()
+        public Section GetNormal2D(bool isRightTurn)
         {
-            var point = A - B;
             return new Section(
                 A,
-                new Point3(
-                    point.X == 0 ? point.X : -point.Y / point.X,
-                    A.Y + 1,
-                    A.Z)
+                B.TurnAroundPoint2D(A, isRightTurn ? -Math.PI / 2 : Math.PI / 2)
                 );
         }
 
+        public Point3 GetVFunc(double t) => A + t * (B - A);
 
+        public override string ToString()
+        {
+            return $"{A}; {B}";
+        }
     }
 }

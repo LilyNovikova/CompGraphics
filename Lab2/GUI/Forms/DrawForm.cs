@@ -69,43 +69,16 @@ namespace GUI.Forms
             };
         }
 
-        private List<List<Point3>> GetSurfacePoints4x5()
+        private List<Point3> GetSurfacePoints()
         {
-            return new List<List<Point3>>
-            {
-               new List<Point3>
+            return new List<Point3>
                 {
-                    new Point3(150, 0, 0),
-                    new Point3(150, 50, 0),
-                    new Point3(150, 100, 0),
-                    new Point3(150, 150, 0),
-                    new Point3(150, 200, 150)
-                },
-                new List<Point3>
-                {
-                    new Point3(100, 0, 120),
-                    new Point3(100, 50, 120),
-                    new Point3(100, 100, 120),
-                    new Point3(100, 150, 120),
-                    new Point3(100, 200, 120)
-                },
-                new List<Point3>
-                {
-                    new Point3(50, 0, 120),
-                    new Point3(50, 50, 120),
-                    new Point3(50, 100, 120),
-                    new Point3(50, 150, 120),
-                    new Point3(50, 200, 30)
-                },
-                new List<Point3>
-                {
-                    new Point3(0, 0, 0),
-                    new Point3(0, 50, 0),
-                    new Point3(0, 100, 0),
-                    new Point3(0, 150, 0),
-                    new Point3(0, 200, 0)
-                }
-            };
+                    new Point3(150, 0, 20),
+                    new Point3(250, 0, 120),
+                    new Point3(200, 0, 220),
+                    new Point3(100, 0, 220),
+                    new Point3(50, 0, 120)
+                };
         }
 
         private void SetPoints()
@@ -123,18 +96,12 @@ namespace GUI.Forms
         {
             var rect = new Rectangle(Canvas.Location.X, Canvas.Location.Y, Canvas.Size.Width, Canvas.Size.Height);
             DrawXYZAxes(e.Graphics, rect);
-            var basePointsArray = points.Select(row => row.Select(point => point.GetDrawingPoint(rect.Width, rect.Height)).ToArray()).ToArray();
-            e.Graphics.DrawPoints(Brushes.Black, basePointsArray, pointRadius);
-
-            if (startSurfaceGrid.Count == 0)
-            {
-                surface = new BezierSurface();
-                surface.SetPoints(startPoints);
-                startSurfaceGrid = surface.GetSurfaceGridPoints(tolerance, rows, columns);
-                surfaceGridPoints = null;
-            }
-            var drawPoints = Point3Utils.GetObjectProjection(surfaceGridPoints ?? startSurfaceGrid, rect.Width, rect.Height);
-            e.Graphics.DrawGrid(Pens.Red, drawPoints);
+            var window = new Window(GetSurfacePoints());
+            e.Graphics.DrawLines(Pens.Black, Point3Utils.GetCurveProjection(window.Points, Canvas.Location.X, Canvas.Location.Y).ToArray());
+            var section = new Section(new Point3(300, 0, 300), new Point3(0, 0, 0));
+            e.Graphics.DrawSection(Pens.Blue, section);
+            var visibleSection = window.GetVisiblePart(section);
+            e.Graphics.DrawSection(Pens.Red, visibleSection);
         }
 
         private void PaintBtn_Click(object sender, EventArgs e)

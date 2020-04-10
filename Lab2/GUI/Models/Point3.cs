@@ -43,7 +43,7 @@ namespace GUI.Models
             return Math.Sqrt(
                 Math.Pow(X - point.X, 2) +
                 Math.Pow(Y - point.Y, 2) +
-                Math.Pow(Z - point.Z, 2) 
+                Math.Pow(Z - point.Z, 2)
                 );
         }
 
@@ -109,6 +109,14 @@ namespace GUI.Models
                 default:
                     throw new ArgumentException($"Unknown argument '{axis}' in turning method");
             }
+        }
+
+        public Point3 TurnAroundPoint2D(Point3 center, double angle)
+        {
+            return new Point3(
+                X * Math.Cos(angle) - Y * Math.Sin(angle),
+                X * Math.Sin(angle) + Y * Math.Cos(angle)
+                );
         }
 
         private int GetPlainXCoordinate()

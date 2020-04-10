@@ -27,7 +27,7 @@ namespace GUI.Models
             Boundaries.Add(new Section(Points.Last(), Points.First()));
         }
 
-        public bool IsConvex
+        public double Convexity
         {
             get
             {
@@ -37,7 +37,7 @@ namespace GUI.Models
                     var currentSign = GetMulSign(Boundaries[i], Boundaries[i + 1]);
                     if (!IsSignChanged(currentSign))
                     {
-                        return false;
+                        return 0;
                     }
                 }
 
@@ -47,9 +47,9 @@ namespace GUI.Models
                         Boundaries.First())
                     ))
                 {
-                    return false;
+                    return 0;
                 }
-                return true;
+                return sign;
 
                 int GetMulSign(Section section1, Section section2)
                 {
