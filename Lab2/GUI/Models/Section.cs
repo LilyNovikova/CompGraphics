@@ -40,8 +40,8 @@ namespace GUI.Models
         public static double Angle(Section section1, Section section2)
         {
             return ScalarMul(section1, section2)
-                * section1.Length
-                * section2.Length;
+                / section1.Length
+                / section2.Length;
         }
 
         public Section GetNormal2D(bool isRightTurn)

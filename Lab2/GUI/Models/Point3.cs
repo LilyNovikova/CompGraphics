@@ -114,8 +114,8 @@ namespace GUI.Models
         public Point3 TurnAroundPoint2D(Point3 center, double angle)
         {
             return new Point3(
-                X * Math.Cos(angle) - Y * Math.Sin(angle),
-                X * Math.Sin(angle) + Y * Math.Cos(angle)
+                X * Math.Cos(angle) - Z * Math.Sin(angle),
+                X * Math.Sin(angle) + Z * Math.Cos(angle)
                 );
         }
 
