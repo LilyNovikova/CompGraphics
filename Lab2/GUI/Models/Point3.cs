@@ -38,6 +38,15 @@ namespace GUI.Models
             return $"X: {(int)Math.Round(X)}, Y: {(int)Math.Round(Y)}, Z: {(int)Math.Round(Z)}";
         }
 
+        public double Distance(Point3 point)
+        {
+            return Math.Sqrt(
+                Math.Pow(X - point.X, 2) +
+                Math.Pow(Y - point.Y, 2) +
+                Math.Pow(Z - point.Z, 2) 
+                );
+        }
+
         public Point GetDrawingPoint(int screenWidth = 0, int screenHeight = 0)
         {
             return new Point(
@@ -61,6 +70,15 @@ namespace GUI.Models
                 point1.X + point2.X,
                 point1.Y + point2.Y,
                 point1.Z + point2.Z
+                );
+        }
+
+        public static Point3 operator -(Point3 point1, Point3 point2)
+        {
+            return new Point3(
+                point1.X - point2.X,
+                point1.Y - point2.Y,
+                point1.Z - point2.Z
                 );
         }
 

@@ -22,8 +22,8 @@ namespace GUI.Forms
         private const int pointRadius = 2;
         private BezierSurface surface;
         private double tolerance = 0.05;
-        private int rows = 10;
-        private int columns = 10;
+        private int rows = 15;
+        private int columns = 15;
         private List<List<Point3>> points;
         private List<List<Point3>> startPoints;
         private List<List<Point3>> startSurfaceGrid;

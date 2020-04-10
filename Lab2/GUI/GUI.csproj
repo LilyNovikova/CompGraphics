@@ -59,6 +59,7 @@
     <Compile Include="Models\Coordinates3D.cs" />
     <Compile Include="Models\BezierCurve.cs" />
     <Compile Include="Models\Point3.cs" />
+    <Compile Include="Models\Polygon.cs" />
     <Compile Include="Models\Section.cs" />
     <Compile Include="Main\Run.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
