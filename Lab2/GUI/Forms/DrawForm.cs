@@ -97,11 +97,14 @@ namespace GUI.Forms
             var rect = new Rectangle(Canvas.Location.X, Canvas.Location.Y, Canvas.Size.Width, Canvas.Size.Height);
             DrawXYZAxes(e.Graphics, rect);
             var window = new Window(GetSurfacePoints());
-            e.Graphics.DrawLines(Pens.Black, Point3Utils.GetCurveProjection(window.Points, Canvas.Location.X, Canvas.Location.Y).ToArray());
+            var toDrawPolygon = window.Points;
+            toDrawPolygon.Add(window.Points.First());
+            var points = Point3Utils.GetCurveProjection(window.Points, Canvas.Size.Width, Canvas.Size.Height).ToArray();
             var section = new Section(new Point3(300, 0, 300), new Point3(0, 0, 0));
-            e.Graphics.DrawSection(Pens.Blue, section);
-            var visibleSection = window.GetVisiblePart(section);
-            e.Graphics.DrawSection(Pens.Red, visibleSection);
+            e.Graphics.DrawLines(Pens.Black, points);
+            e.Graphics.DrawSection(Pens.Red, section, Canvas.Size.Width, Canvas.Size.Height);
+            //var visibleSection = window.GetVisiblePart(section);
+            // e.Graphics.DrawSection(Pens.Red, visibleSection);
         }
 
         private void PaintBtn_Click(object sender, EventArgs e)
