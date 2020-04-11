@@ -44,32 +44,18 @@ namespace GUI.Forms
             inputFileCmb.Enabled = false;
         }
 
-        private List<List<Point3>> GetSurfacePoints3x3()
+        private List<Point3> GetSquare()
         {
-            return new List<List<Point3>>
-            {
-                new List<Point3>
+            return new List<Point3>
                 {
                     new Point3(0, 0, 0),
-                    new Point3(50, 0, 120),
-                    new Point3(100, 0, 0)
-                },
-                new List<Point3>
-                {
-                    new Point3(0, 50, 0),
-                    new Point3(50, 50, 120),
-                    new Point3(100, 50, 0)
-                },
-                new List<Point3>
-                {
-                    new Point3(0, 100, 0),
-                    new Point3(50, 100, 120),
-                    new Point3(100, 100, 0)
-                }
-            };
+                    new Point3(100, 0, 0),
+                    new Point3(100, 0, 100),
+                    new Point3(0, 0, 100)
+                };
         }
 
-        private List<Point3> GetSurfacePoints()
+        private List<Point3> GetPentagon()
         {
             return new List<Point3>
                 {
@@ -96,15 +82,15 @@ namespace GUI.Forms
         {
             var rect = new Rectangle(Canvas.Location.X, Canvas.Location.Y, Canvas.Size.Width, Canvas.Size.Height);
             DrawXYZAxes(e.Graphics, rect);
-            var window = new Window(GetSurfacePoints());
+            var window = new Window(GetSquare());
             var toDrawPolygon = window.Points;
             toDrawPolygon.Add(window.Points.First());
             var points = Point3Utils.GetCurveProjection(window.Points, Canvas.Size.Width, Canvas.Size.Height).ToArray();
-            var section = new Section(new Point3(300, 0, 300), new Point3(0, 0, 0));
+            var section = new Section(new Point3(200, 0, 50), new Point3(-50, 0, 50));
             e.Graphics.DrawLines(Pens.Black, points);
             e.Graphics.DrawSection(Pens.Red, section, Canvas.Size.Width, Canvas.Size.Height);
-            //var visibleSection = window.GetVisiblePart(section);
-            // e.Graphics.DrawSection(Pens.Red, visibleSection);
+            var visibleSection = window.GetVisiblePart(section);
+            e.Graphics.DrawSection(new Pen(Brushes.Black, 2), visibleSection, Canvas.Size.Width, Canvas.Size.Height);
         }
 
         private void PaintBtn_Click(object sender, EventArgs e)

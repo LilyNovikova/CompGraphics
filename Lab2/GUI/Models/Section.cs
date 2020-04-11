@@ -27,7 +27,14 @@ namespace GUI.Models
 
         public static double operator *(Section section1, Section section2)
         {
-            return section1.Length * section2.Length * Angle(section1, section2);
+            var p1 = section1.A - section1.B;
+            var p2 = section2.A - section2.B;
+            return new Point3(
+                p1.Y * p2.Z - p1.Z * p2.Y, 
+                p1.Z * p2.X - p1.X * p2.Z, 
+                p1.X * p2.Y - p1.Y * p2.X)
+                .Distance(new Point3(0, 0, 0));
+           // return section1.Length * section2.Length * SinAngle(section1, section2);
         }
 
         public static double ScalarMul(Section section1, Section section2)
@@ -37,7 +44,14 @@ namespace GUI.Models
             return p1.X * p2.X + p1.Y * p2.Y + p1.Z * p2.Z;
         }
 
-        public static double Angle(Section section1, Section section2)
+        public static double CosAngle(Section section1, Section section2)
+        {
+            return ScalarMul(section1, section2)
+                / section1.Length
+                / section2.Length;
+        }
+
+        public static double SinAngle(Section section1, Section section2)
         {
             return ScalarMul(section1, section2)
                 / section1.Length

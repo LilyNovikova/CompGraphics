@@ -43,7 +43,7 @@ namespace GUI.Models
 
                 if (!IsSignChanged(
                     GetMulSign(
-                        Boundaries.Last(), 
+                        Boundaries.Last(),
                         Boundaries.First())
                     ))
                 {
@@ -76,6 +76,19 @@ namespace GUI.Models
                     }
                     return true;
                 }
+            }
+        }
+
+        public IList<Section> InnerNormals
+        {
+            get
+            {
+                var convexity = Convexity;
+                if (convexity == 0)
+                {
+                    throw new NotImplementedException("It is not a convex window");
+                }
+                return Boundaries.Select(b => b.GetNormal2D(convexity < 0)).ToList();
             }
         }
     }
