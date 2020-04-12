@@ -35,9 +35,9 @@ namespace GUI.Utils
             }
         }
 
-        public static void DrawSection(this Graphics g, Pen pen, Section section, int screenWidth = 0, int screenHeight = 0)
+        public static void DrawSection(this Graphics g, Pen pen, Section section, int screenWidth = 0, int screenHeight = 0, bool isIsometric = true)
         {
-            g.DrawLine(pen, section.A.GetDrawingPoint(screenWidth, screenHeight), section.B.GetDrawingPoint(screenWidth, screenHeight));
+            g.DrawLine(pen, section.A.GetDrawingPoint(screenWidth, screenHeight, isIsometric), section.B.GetDrawingPoint(screenWidth, screenHeight, isIsometric));
         }
 
         public static void DrawGrid(this Graphics g, Pen pen, IEnumerable<IEnumerable<Point>> points)

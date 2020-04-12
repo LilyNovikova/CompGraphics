@@ -76,18 +76,20 @@ namespace GUI.Models
             var t0 = 0.0;
             var t1 = 1.0;
             var isVisible = true;
-            var dx = s.A.X - s.B.X;
-            var dz = s.A.Z - s.B.Z;
+            var vector = s.Vector;
+            var dx = vector.X;
+            var dy = vector.Y;
             foreach (Section b in Boundaries)
             {
                 var q = new Point3(
                                 s.A.X - b.A.X,
-                                0,
-                                s.A.Z - b.A.Z
+                                s.A.Y - b.A.Y,
+                                0
                                 );
                 var n = b.GetNormal2D(dir < 0);
-                var pN = dx * n.B.X + dz * n.B.Z;
-                var qN = q.X * n.B.X + q.Z * n.B.Z;
+                var nV = n.Vector;
+                var pN = dx * nV.X + dy * nV.Y;
+                var qN = q.X * nV.X + q.Y * nV.Y;
 
                 if (Math.Abs(pN) < Tolerance)
                 {            /* Паралл ребру или точка */
@@ -126,7 +128,7 @@ namespace GUI.Models
                     }
                 }
             }
-            double x0, z0, x1, z1;
+            double x0, y0, x1, y1;
             if (isVisible)
             {
                 if (t0 > t1)
@@ -141,8 +143,8 @@ namespace GUI.Models
                     if (t0 > 0)
                     {
                         x0 = s.A.X + t0 * dx;
-                        z0 = s.A.Z + t0 * dz;
-                        p0 = new Point3(x0, 0, z0);
+                        y0 = s.A.Y + t0 * dy;
+                        p0 = new Point3(x0, y0, 0);
                     }
                     else
                     {
@@ -151,8 +153,8 @@ namespace GUI.Models
                     if (t1 < 1)
                     {
                         x1 = s.A.X + t1 * dx;
-                        z1 = s.A.Z + t1 * dz;
-                        p1 = new Point3(x1, 0, z1);
+                        y1 = s.A.Y + t1 * dy;
+                        p1 = new Point3(x1, y1, 0);
                     }
                     else
                     {

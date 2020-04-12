@@ -24,18 +24,18 @@ namespace GUI.Utils
                 );
         }
 
-        public static IEnumerable<Point> GetCurveProjection(this IEnumerable<Point3> points, int screenWidth = 0, int screenHeight = 0)
+        public static IEnumerable<Point> GetCurveProjection(this IEnumerable<Point3> points, int screenWidth = 0, int screenHeight = 0, bool isIsometric = true)
         {
-            return points.Select(point => point.GetDrawingPoint(screenWidth, screenHeight));
+            return points.Select(point => point.GetDrawingPoint(screenWidth, screenHeight, isIsometric));
         }
 
-        public static IEnumerable<IEnumerable<Point>> GetObjectProjection(this IEnumerable<IEnumerable<Point3>> points, int screenWidth = 0, int screenHeight = 0)
+        public static IEnumerable<IEnumerable<Point>> GetObjectProjection(this IEnumerable<IEnumerable<Point3>> points, int screenWidth = 0, int screenHeight = 0, bool isIsometric = true)
         {
             return points.
                 Select(
                 row => row
                 .Select(
-                    point => point.GetDrawingPoint(screenWidth, screenHeight)
+                    point => point.GetDrawingPoint(screenWidth, screenHeight, isIsometric)
                     )
                 );
         }

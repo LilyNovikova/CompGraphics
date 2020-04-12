@@ -47,8 +47,15 @@ namespace GUI.Models
                 );
         }
 
-        public Point GetDrawingPoint(int screenWidth = 0, int screenHeight = 0)
+        public Point GetDrawingPoint(int screenWidth = 0, int screenHeight = 0, bool isIsometric = true)
         {
+            if(!isIsometric)
+            {
+                return new Point(
+                screenWidth / 2 + (int)Math.Round(X),
+                screenHeight / 2 - (int)Math.Round(Y)
+                );
+            }
             return new Point(
                 screenWidth / 2 + GetPlainXCoordinate(),
                 screenHeight / 2 + GetPlainYCoordinate()
@@ -115,21 +122,19 @@ namespace GUI.Models
         {
             var point = new Point3(X - center.X, Y - center.Y, Z - center.Z);
             return center + new Point3(
-                point.X * Math.Cos(angle) - point.Z * Math.Sin(angle),
-                0,
-                point.X * Math.Sin(angle) + point.Z * Math.Cos(angle)
+                point.X * Math.Cos(angle) - point.Y * Math.Sin(angle),
+                point.X * Math.Sin(angle) + point.Y * Math.Cos(angle),
+                0
                 );
         }
 
         private int GetPlainXCoordinate()
         {
             return (int)Math.Round(Math.Sin(Math.PI / 3) * (Y - X));
-            //return (int)Math.Round(Math.Sin(Math.PI / 3) * (X - Z));
         }
         private int GetPlainYCoordinate()
         {
             return (int)Math.Round(-Z + Math.Cos(Math.PI / 3) * (X + Y));
-            //return (int)Math.Round(-Y + Math.Cos(Math.PI / 3) * (X + Z));
         }
     }
 }

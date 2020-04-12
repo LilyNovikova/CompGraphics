@@ -28,7 +28,6 @@ namespace GUI.Forms
         private List<List<Point3>> startPoints;
         private List<List<Point3>> startSurfaceGrid;
         private List<List<Point3>> surfaceGridPoints;
-        private Coordinates3D coordinates;
 
         public DrawForm()
         {
@@ -59,11 +58,11 @@ namespace GUI.Forms
         {
             return new List<Point3>
                 {
-                    new Point3(150, 0, 20),
-                    new Point3(250, 0, 120),
-                    new Point3(200, 0, 220),
-                    new Point3(100, 0, 220),
-                    new Point3(50, 0, 120)
+                    new Point3(150, 20, 0),
+                    new Point3(250, 120, 0),
+                    new Point3(200, 220, 0),
+                    new Point3(100, 220, 0),
+                    new Point3(50, 120, 0)
                 };
         }
 
@@ -81,16 +80,17 @@ namespace GUI.Forms
         private void Canvas_Paint(object sender, PaintEventArgs e)
         {
             var rect = new Rectangle(Canvas.Location.X, Canvas.Location.Y, Canvas.Size.Width, Canvas.Size.Height);
-            DrawXYZAxes(e.Graphics, rect);
-            var window = new Window(GetSquare());
+            // DrawXYZAxes(e.Graphics, rect);
+            DrawXYAxes(e.Graphics, rect);
+            var window = new Window(GetPentagon());
             var toDrawPolygon = window.Points;
             toDrawPolygon.Add(window.Points.First());
-            var points = Point3Utils.GetCurveProjection(window.Points, Canvas.Size.Width, Canvas.Size.Height).ToArray();
-            var section = new Section(new Point3(200, 0, 50), new Point3(-50, 0, 50));
+            var points = Point3Utils.GetCurveProjection(window.Points, Canvas.Size.Width, Canvas.Size.Height, isIsometric: false).ToArray();
+            var section = new Section(new Point3(200, 50, 0), new Point3(-50, 100, 0));
             e.Graphics.DrawLines(Pens.Black, points);
-            e.Graphics.DrawSection(Pens.Red, section, Canvas.Size.Width, Canvas.Size.Height);
+            e.Graphics.DrawSection(Pens.Red, section, Canvas.Size.Width, Canvas.Size.Height, isIsometric: false);
             var visibleSection = window.GetVisiblePart(section);
-            e.Graphics.DrawSection(new Pen(Brushes.Black, 2), visibleSection, Canvas.Size.Width, Canvas.Size.Height);
+            e.Graphics.DrawSection(new Pen(Brushes.Black, 2), visibleSection, Canvas.Size.Width, Canvas.Size.Height, isIsometric: false);
         }
 
         private void PaintBtn_Click(object sender, EventArgs e)
@@ -113,112 +113,26 @@ namespace GUI.Forms
             return JsonConvert.DeserializeObject<List<List<Point3>>>(pStr);
         }
 
-        private void XTurnTrb_Scroll(object sender, EventArgs e)
-        {
-            YTurnTrb.Value = 0;
-            ZTurnTrb.Value = 0;
-
-            XUdn.Value = XTurnTrb.Value;
-            YUdn.Value = YTurnTrb.Value;
-            ZUdn.Value = ZTurnTrb.Value;
-            TurnView();
-        }
-
-        private void YTurnTrb_Scroll(object sender, EventArgs e)
-        {
-            XTurnTrb.Value = 0;
-            ZTurnTrb.Value = 0;
-
-            YUdn.Value = YTurnTrb.Value;
-            XUdn.Value = XTurnTrb.Value;
-            ZUdn.Value = ZTurnTrb.Value;
-            TurnView();
-        }
-
-        private void ZTurnTrb_Scroll(object sender, EventArgs e)
-        {
-            YTurnTrb.Value = 0;
-            XTurnTrb.Value = 0;
-
-            ZUdn.Value = ZTurnTrb.Value;
-            XUdn.Value = XTurnTrb.Value;
-            YUdn.Value = YTurnTrb.Value;
-            TurnView();
-        }
-
-        private void TurnPoints()
-        {
-            var angleX = MathUtils.GradToRad(XTurnTrb.Value);
-            var angleY = MathUtils.GradToRad(YTurnTrb.Value);
-            var angleZ = MathUtils.GradToRad(ZTurnTrb.Value);
-
-            coordinates.Turn(angleX, angleY, angleZ);
-
-            var p = startPoints as IEnumerable<IEnumerable<Point3>>;
-            p = p.TurnObject(Point3.Axes.X, angleX);
-            p = p.TurnObject(Point3.Axes.Y, angleY);
-            p = p.TurnObject(Point3.Axes.Z, angleZ);
-            points = p.Select(row => row.ToList()).ToList();
-
-            if (startSurfaceGrid != null && startSurfaceGrid.Count != 0)
-            {
-                p = startSurfaceGrid as IEnumerable<IEnumerable<Point3>>;
-                p = p.TurnObject(Point3.Axes.X, angleX);
-                p = p.TurnObject(Point3.Axes.Y, angleY);
-                p = p.TurnObject(Point3.Axes.Z, angleZ);
-                surfaceGridPoints = p.Select(row => row.ToList()).ToList();
-            }
-        }
-
-        private void TurnView()
-        {
-            TurnPoints();
-            Canvas.Refresh();
-        }
-
-        private void DrawXYZAxes(Graphics g, Rectangle field)
+        private void DrawXYAxes(Graphics g, Rectangle field)
         {
             var brush = Brushes.Black;
             var font = SystemFonts.CaptionFont;
             var pen = new Pen(Brushes.DimGray, axesWidth);
-            coordinates.Draw(g, pen, brush, font, axesNameOffset);
+            g.DrawLine(pen, 0, field.Height / 2, field.Width, field.Height / 2);
+            g.DrawString("X", font, brush,
+                new Point(field.Width - axesNameOffset, field.Height / 2));
+            g.DrawLine(pen, field.Width / 2, 0, field.Width / 2, field.Height + axesNameOffset);
+            g.DrawString("Y", font, brush,
+               new Point(field.Width / 2 - axesNameOffset, axesNameOffset));
         }
 
         private void DrawForm_ResizeEnd(object sender, EventArgs e)
         {
-            coordinates = new Coordinates3D(Canvas.Width, Canvas.Height);
-            XTurnTrb_Scroll(sender, e);
-            YTurnTrb_Scroll(sender, e);
-            ZTurnTrb_Scroll(sender, e);
             Canvas.Refresh();
         }
 
         private void ResetAngleBtn_Click(object sender, EventArgs e)
         {
-            XTurnTrb.Value = 0;
-            YTurnTrb.Value = 0;
-            ZTurnTrb.Value = 0;
-            XTurnTrb_Scroll(sender, e);
-            YTurnTrb_Scroll(sender, e);
-            ZTurnTrb_Scroll(sender, e);
-        }
-
-        private void XUdn_ValueChanged(object sender, EventArgs e)
-        {
-            XTurnTrb.Value = (int)XUdn.Value;
-            XTurnTrb_Scroll(sender, e);
-        }
-
-        private void YUdn_ValueChanged(object sender, EventArgs e)
-        {
-            YTurnTrb.Value = (int)YUdn.Value;
-            YTurnTrb_Scroll(sender, e);
-        }
-
-        private void ZUdn_ValueChanged(object sender, EventArgs e)
-        {
-            ZTurnTrb.Value = (int)ZUdn.Value;
-            ZTurnTrb_Scroll(sender, e);
         }
 
         private void inputFileCmb_SelectedIndexChanged(object sender, EventArgs e)
