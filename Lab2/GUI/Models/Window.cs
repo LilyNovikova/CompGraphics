@@ -13,60 +13,9 @@ namespace GUI.Models
         {
         }
 
-        public Section GetVisiblePart1(Section section)
+        public Section GetVisiblePart(Section section, double tolerance = 0)
         {
-            var dir = Convexity;
-            if (dir == 0)
-            {
-                throw new NotImplementedException("It is not a convex window");
-            }
-
-            var t0 = 0.0;
-            var t1 = 1.0;
-            var isVisible = false;
-            foreach (Section b in Boundaries)
-            {
-                var p = GetP(b, section);
-                var q = GetQ(b, section, t0);
-                if (p == 0 && q < 0)
-                {
-                    break;
-                }
-                else if (p != 0)
-                {
-                    if (p > 0)
-                    {
-                        for (var i = 0.0; i < 1; i += 0.000001)
-                        {
-                            if (Math.Abs(GetQ(b, section, i)) < Tolerance)
-                            {
-                                t0 = i > t0 ? i : t0;
-                                isVisible = true;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        for (var i = 1.0; i > 0; i -= 0.000001)
-                        {
-                            if (Math.Abs(GetQ(b, section, i)) < Tolerance)
-                            {
-                                t0 = i < t1 ? i : t1;
-                                isVisible = true;
-                            }
-                        }
-                    }
-                }
-            }
-            if (isVisible)
-            {
-                return new Section(section.GetVFunc(t0), section.GetVFunc(t1));
-            }
-            else return default;
-        }
-
-        public Section GetVisiblePart(Section section)
-        {
+            var tol = tolerance == 0 ? Tolerance : tolerance;
             var s = section;
             var dir = Convexity;
             if (dir == 0)
@@ -91,7 +40,7 @@ namespace GUI.Models
                 var pN = dx * nV.X + dy * nV.Y;
                 var qN = q.X * nV.X + q.Y * nV.Y;
 
-                if (Math.Abs(pN) < Tolerance)
+                if (Math.Abs(pN) < tolerance)
                 {            /* Паралл ребру или точка */
                     if (qN < 0)
                     {
@@ -109,7 +58,7 @@ namespace GUI.Models
                             isVisible = false;
                             break;
                         }
-                        if (r < t1)
+                        if (r <= t1)
                         {
                             t1 = r;
                         }
@@ -121,7 +70,7 @@ namespace GUI.Models
                             isVisible = false;
                             break;
                         }
-                        if (r > t0)
+                        if (r >= t0)
                         {
                             t0 = r;
                         }

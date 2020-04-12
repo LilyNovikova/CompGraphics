@@ -15,32 +15,26 @@ namespace GUI.Forms
 {
     public partial class DrawForm : Form
     {
-        private string pointsFilename = "0points.txt";
+        private string windowFilename = "5window.txt";
+        private string sectionsFilename = "2sections.txt";
         private const string pointsFilePath = "Resources\\";
         private const int axesWidth = 2;
         private const int axesNameOffset = 10;
         private const int pointRadius = 2;
-        private BezierSurface surface;
-        private double tolerance = 0.05;
-        private int rows = 15;
-        private int columns = 15;
-        private List<List<Point3>> points;
-        private List<List<Point3>> startPoints;
-        private List<List<Point3>> startSurfaceGrid;
-        private List<List<Point3>> surfaceGridPoints;
+        private double tolerance = 0.0001;
+        private Window window;
+        private List<Section> sections;
+        private bool isVisibleHighlighted = false;
 
         public DrawForm()
         {
             InitializeComponent();
-            inputFileCmb.SelectedItem = inputFileCmb.Items[1];
-            SetPoints();
-            coordinates = new Coordinates3D(Canvas.Size.Width, Canvas.Size.Height);
-            surface = new BezierSurface();
-            startSurfaceGrid = new List<List<Point3>>();
-            surface.SetPoints(points);
-            SavePoints(pointsFilename);
-            startSurfaceGrid.Clear();
-            inputFileCmb.Enabled = false;
+            windowInputFileCmb.SelectedItem = windowInputFileCmb.Items[0];
+            SetWindow();
+            sectionsInputFileCmb.SelectedItem = sectionsInputFileCmb.Items[1];
+            SetSections();
+
+            //SavePoints(windowFilename, sectionsFilename);
         }
 
         private List<Point3> GetSquare()
@@ -66,11 +60,55 @@ namespace GUI.Forms
                 };
         }
 
-        private void SetPoints()
+        private List<Point3> GetOctagon()
         {
-            pointsFilename = pointsFilePath + inputFileCmb.SelectedItem.ToString();
-            startPoints = GetSavedPoints(pointsFilename);
-            points = startPoints;
+            return new List<Point3>
+                {
+                    new Point3(10, 230, 0),
+                    new Point3(-50, 180, 0),
+                    new Point3(-10, 100, 0),
+                    new Point3(70, 20, 0),
+                    new Point3(120, 50, 0),
+                    new Point3(170, 130, 0),
+                    new Point3(150, 180, 0),
+                    new Point3(100, 220, 0)
+                };
+        }
+
+        private List<Point3> GetTriangle()
+        {
+            return new List<Point3>
+                {
+                    new Point3(-10, 100, 0),
+                    new Point3(170, 130, 0),
+                    new Point3(150, 180, 0)
+                };
+        }
+
+        private List<Section> GetSections()
+        {
+            return new List<Section>
+            {
+                new Section(new Point3(200, 50, 0), new Point3(-50, 100, 0)),
+                new Section(new Point3(200, 100, 0), new Point3(-50, 0, 0)),
+                new Section(new Point3(-200, 50, 0), new Point3(200, 100, 0)),
+                new Section(new Point3(100, -100, 0), new Point3(100, 500, 0)),
+                new Section(new Point3(100, 400, 0), new Point3(300, -100, 0)),
+                new Section(new Point3(75, 75, 0), new Point3(300, 75, 0)),
+                new Section(new Point3(100, 100, 0), new Point3(50, 50, 0))
+            };
+        }
+
+        private void SetWindow()
+        {
+            windowFilename = pointsFilePath + (windowInputFileCmb.SelectedItem ?? windowFilename).ToString();
+            window = GetSavedWindow(windowFilename);
+        }
+
+        private void SetSections()
+        {
+            sectionsFilename = pointsFilePath + (sectionsInputFileCmb.SelectedItem ?? sectionsFilename).ToString();
+            sections = GetSavedSections(sectionsFilename);
         }
 
         private void DrawForm_Load(object sender, EventArgs e)
@@ -80,37 +118,46 @@ namespace GUI.Forms
         private void Canvas_Paint(object sender, PaintEventArgs e)
         {
             var rect = new Rectangle(Canvas.Location.X, Canvas.Location.Y, Canvas.Size.Width, Canvas.Size.Height);
-            // DrawXYZAxes(e.Graphics, rect);
             DrawXYAxes(e.Graphics, rect);
-            var window = new Window(GetPentagon());
-            var toDrawPolygon = window.Points;
-            toDrawPolygon.Add(window.Points.First());
             var points = Point3Utils.GetCurveProjection(window.Points, Canvas.Size.Width, Canvas.Size.Height, isIsometric: false).ToArray();
-            var section = new Section(new Point3(200, 50, 0), new Point3(-50, 100, 0));
-            e.Graphics.DrawLines(Pens.Black, points);
-            e.Graphics.DrawSection(Pens.Red, section, Canvas.Size.Width, Canvas.Size.Height, isIsometric: false);
-            var visibleSection = window.GetVisiblePart(section);
-            e.Graphics.DrawSection(new Pen(Brushes.Black, 2), visibleSection, Canvas.Size.Width, Canvas.Size.Height, isIsometric: false);
+            e.Graphics.DrawPolygon(Pens.Black, points);
+            e.Graphics.DrawPoints(Brushes.Black, points, pointRadius);
+            e.Graphics.DrawSections(Pens.Red, sections, Canvas.Size.Width, Canvas.Size.Height, isIsometric: false);
+
+            if (isVisibleHighlighted)
+            {
+                HighlightVisible(e.Graphics, rect);
+            }
         }
 
         private void PaintBtn_Click(object sender, EventArgs e)
         {
-            startSurfaceGrid.Clear();
             Canvas.Refresh();
         }
 
-        private void SavePoints(string pointsFilename)
+        private void SavePoints(string windowFilename, string sectionsFilename)
         {
-            var pStr = JsonConvert.SerializeObject(startPoints).Replace("},", "},\n").Replace("],", "],\n\n");
-            var writer = File.CreateText(pointsFilename);
+            var pStr = JsonConvert.SerializeObject(window.Points).Replace("},", "},\n").Replace("],", "],\n\n");
+            var writer = File.CreateText(windowFilename);
+            writer.WriteLine(pStr);
+            writer.Close();
+
+            pStr = JsonConvert.SerializeObject(sections).Replace("},", "},\n").Replace("],", "],\n\n");
+            writer = File.CreateText(sectionsFilename);
             writer.WriteLine(pStr);
             writer.Close();
         }
 
-        private List<List<Point3>> GetSavedPoints(string pointsFilename)
+        private Window GetSavedWindow(string filename)
         {
-            var pStr = File.ReadAllText(pointsFilename);
-            return JsonConvert.DeserializeObject<List<List<Point3>>>(pStr);
+            var pStr = File.ReadAllText(filename);
+            return new Window(JsonConvert.DeserializeObject<List<Point3>>(pStr));
+        }
+
+        private List<Section> GetSavedSections(string filename)
+        {
+            var pStr = File.ReadAllText(filename);
+            return JsonConvert.DeserializeObject<List<Section>>(pStr);
         }
 
         private void DrawXYAxes(Graphics g, Rectangle field)
@@ -131,16 +178,32 @@ namespace GUI.Forms
             Canvas.Refresh();
         }
 
-        private void ResetAngleBtn_Click(object sender, EventArgs e)
+        private void highlightVisibleBtn_Click(object sender, EventArgs e)
         {
+            isVisibleHighlighted = !isVisibleHighlighted;
+            Canvas.Refresh();
         }
 
-        private void inputFileCmb_SelectedIndexChanged(object sender, EventArgs e)
+        private void HighlightVisible(Graphics g, Rectangle field)
         {
-            SetPoints();
-            XTurnTrb.Value = 0;
-            YTurnTrb.Value = 0;
-            ZTurnTrb.Value = 0;
+            var visible = sections.Select(s => window.GetVisiblePart(s, tolerance)).Where(s => s != null).ToList();
+            foreach (Section s in visible)
+            {
+                g.DrawSection(new Pen(Brushes.Cyan, 2), s, Canvas.Size.Width, Canvas.Size.Height, isIsometric: false);
+            }
+        }
+
+        private void windowInputFileCmb_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            SetWindow();
+            SetSections();
+            DrawForm_ResizeEnd(sender, e);
+        }
+
+        private void sectionsInputFileCmb_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            SetWindow();
+            SetSections();
             DrawForm_ResizeEnd(sender, e);
         }
     }
