@@ -38,8 +38,24 @@ namespace GUI.Models
             return $"X: {(int)Math.Round(X)}, Y: {(int)Math.Round(Y)}, Z: {(int)Math.Round(Z)}";
         }
 
-        public Point GetDrawingPoint(int screenWidth = 0, int screenHeight = 0)
+        public double Distance(Point3 point)
         {
+            return Math.Sqrt(
+                Math.Pow(X - point.X, 2) +
+                Math.Pow(Y - point.Y, 2) +
+                Math.Pow(Z - point.Z, 2)
+                );
+        }
+
+        public Point GetDrawingPoint(int screenWidth = 0, int screenHeight = 0, bool isIsometric = true)
+        {
+            if(!isIsometric)
+            {
+                return new Point(
+                screenWidth / 2 + (int)Math.Round(X),
+                screenHeight / 2 - (int)Math.Round(Y)
+                );
+            }
             return new Point(
                 screenWidth / 2 + GetPlainXCoordinate(),
                 screenHeight / 2 + GetPlainYCoordinate()
@@ -61,6 +77,15 @@ namespace GUI.Models
                 point1.X + point2.X,
                 point1.Y + point2.Y,
                 point1.Z + point2.Z
+                );
+        }
+
+        public static Point3 operator -(Point3 point1, Point3 point2)
+        {
+            return new Point3(
+                point1.X - point2.X,
+                point1.Y - point2.Y,
+                point1.Z - point2.Z
                 );
         }
 
@@ -93,15 +118,23 @@ namespace GUI.Models
             }
         }
 
+        public Point3 TurnAroundPoint2D(Point3 center, double angle)
+        {
+            var point = new Point3(X - center.X, Y - center.Y, Z - center.Z);
+            return center + new Point3(
+                point.X * Math.Cos(angle) - point.Y * Math.Sin(angle),
+                point.X * Math.Sin(angle) + point.Y * Math.Cos(angle),
+                0
+                );
+        }
+
         private int GetPlainXCoordinate()
         {
             return (int)Math.Round(Math.Sin(Math.PI / 3) * (Y - X));
-            //return (int)Math.Round(Math.Sin(Math.PI / 3) * (X - Z));
         }
         private int GetPlainYCoordinate()
         {
             return (int)Math.Round(-Z + Math.Cos(Math.PI / 3) * (X + Y));
-            //return (int)Math.Round(-Y + Math.Cos(Math.PI / 3) * (X + Z));
         }
     }
 }
