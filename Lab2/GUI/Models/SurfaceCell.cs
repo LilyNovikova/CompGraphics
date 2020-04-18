@@ -19,6 +19,11 @@ namespace GUI.Models
 
         public Section Normal => Section.VectorMul(Diagonal1, Diagonal2);
 
+        public double FurthestDistance => ToList().Max(p1 => p1.Distance(Const.ViewPoint));
+
+        public double ClosestDistance => ToList().Min(p1 => p1.Distance(Const.ViewPoint));
+
+
         public bool IsFront
         {
             get
