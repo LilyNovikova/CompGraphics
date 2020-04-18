@@ -145,5 +145,30 @@ namespace GUI.Models
             }
             return points;
         }
+
+        public List<SurfaceCell> GetSurfaceCells(double tolerance = 0.001, int rows = 100, int columns = 100)
+        {
+            var cells = new List<SurfaceCell>();
+            var surface = GetSurfacePoints(tolerance);
+            var columnStep = surface[0].Count / columns;
+            columnStep = columnStep == 0 ? 1 : columnStep;
+            var rowStep = surface.Count / rows;
+            rowStep = rowStep == 0 ? 1 : rowStep;
+            for (int r = rowStep; r <= surface.Count - 1; r += rowStep)
+            {
+                for (int c = columnStep; c <= surface[r].Count - 1; c += columnStep)
+                {
+                    cells.Add(new SurfaceCell
+                    {
+                        A1 = surface[r - rowStep][c - columnStep],
+                        A2 = surface[r - rowStep][c],
+                        B1 = surface[r][c - columnStep],
+                        B2 = surface[r][c]
+                    });
+                }
+            }
+
+            return cells;
+        }
     }
 }
