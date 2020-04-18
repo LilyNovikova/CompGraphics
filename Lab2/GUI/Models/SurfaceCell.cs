@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GUI.Utils;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,11 +14,16 @@ namespace GUI.Models
         public Point3 B1 { get; set; }
         public Point3 B2 { get; set; }
 
+        public Section Diagonal1 => new Section(A1, B2);
+        public Section Diagonal2 => new Section(A2, B1);
+
+        public Section Normal => Section.VectorMul(Diagonal1, Diagonal2);
+
         public bool IsFront
         {
             get
             {
-                var dirY1 = A1.GetDrawingPoint().Y - B1.GetDrawingPoint().Y;
+                /*var dirY1 = A1.GetDrawingPoint().Y - B1.GetDrawingPoint().Y;
                 var dirY2 = A2.GetDrawingPoint().Y - B2.GetDrawingPoint().Y;
                 var dirX1 = A1.GetDrawingPoint().X - B1.GetDrawingPoint().X;
                 var dirX2 = A2.GetDrawingPoint().X - B2.GetDrawingPoint().X;
@@ -29,11 +35,21 @@ namespace GUI.Models
                 {
                     return false;
                 }
-                throw new Exception($"Grid cell is invalid. Dir1 {dirY1}; dir2 {dirY2}");
+                throw new Exception($"Grid cell is invalid. Dir1 {dirY1}; dir2 {dirY2}");*/
+                var distanceBegin = Normal.A.Distance(Const.ViewPoint);
+                var distanceEnd = Normal.B.Distance(Const.ViewPoint);
+                if (distanceBegin >= distanceEnd)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
         }
 
-        public SurfaceCell FromList(IEnumerable<Point3> points)
+        public static SurfaceCell FromList(IEnumerable<Point3> points)
         {
             if (points.Count() != 4)
             {

@@ -27,22 +27,28 @@ namespace GUI.Models
             return new Section(alpha * section.A, alpha * section.B);
         }
 
-        public static double operator *(Section section1, Section section2)
-        {
-            var p1 = section1.A - section1.B;
-            var p2 = section2.A - section2.B;
-            return new Point3(
-                p1.Y * p2.Z - p1.Z * p2.Y,
-                p1.Z * p2.X - p1.X * p2.Z,
-                p1.X * p2.Y - p1.Y * p2.X)
-                .Distance(new Point3(0, 0, 0));
-        }
+        public static double operator *(Section section1, Section section2) => 
+            VectorMul(section1, section2).Length;
 
         public static double ScalarMul(Section section1, Section section2)
         {
             var p1 = section1.A - section1.B;
             var p2 = section2.A - section2.B;
             return p1.X * p2.X + p1.Y * p2.Y + p1.Z * p2.Z;
+        }
+
+        public static Section VectorMul(Section section1, Section section2)
+        {
+            var p1 = section1.Vector;
+            var p2 = section2.Vector;
+            return new Section(
+                new Point3(0, 0, 0), 
+                new Point3(
+                    p1.Y * p2.Z - p1.Z * p2.Y, 
+                    p1.Z * p2.X - p1.X * p2.Z, 
+                    p1.X * p2.Y - p1.Y * p2.X
+                    )
+                );
         }
 
         public static double CosAngle(Section section1, Section section2)

@@ -129,15 +129,7 @@ namespace GUI.Forms
             var basePointsArray = points.Select(row => row.Select(point => point.GetDrawingPoint(rect.Width, rect.Height)).ToArray()).ToArray();
             e.Graphics.DrawPoints(Brushes.Black, basePointsArray, pointRadius);
 
-            /*if (startSurfaceGrid.Count == 0)
-            {
-                surface = new BezierSurface();
-                surface.SetPoints(startPoints);
-                startSurfaceGrid = surface.GetSurfaceGridPoints(tolerance, rows, columns);
-                surfaceGridPoints = null;
-            }
-            var drawPoints = Point3Utils.GetObjectProjection(surfaceGridPoints ?? startSurfaceGrid, rect.Width, rect.Height);
-            e.Graphics.DrawGrid(Pens.Red, drawPoints);*/
+
 
             var innerBrush = Brushes.Cyan;
             var outerBrush = Brushes.Red;
@@ -150,11 +142,32 @@ namespace GUI.Forms
                 surfaceCells = null;
             }
             var check = startSurfaceCells;
-            foreach (SurfaceCell cell in (surfaceCells ?? startSurfaceCells))
+            var inner = (surfaceCells ?? startSurfaceCells).Where(cell => !cell.IsFront);
+            var outer = (surfaceCells ?? startSurfaceCells).Where(cell => cell.IsFront);
+            foreach (SurfaceCell cell in inner)
             {
                 var drawPoints = Point3Utils.GetCurveProjection(cell.ToList(), rect.Width, rect.Height).ToArray();
-                e.Graphics.FillPolygon(cell.IsFront ? outerBrush : innerBrush, drawPoints);
+                e.Graphics.FillPolygon(innerBrush, drawPoints);
             }
+
+            foreach (SurfaceCell cell in outer)
+            {
+                var drawPoints = Point3Utils.GetCurveProjection(cell.ToList(), rect.Width, rect.Height).ToArray();
+                e.Graphics.FillPolygon(outerBrush, drawPoints);
+            }
+
+
+
+            if (startSurfaceGrid.Count == 0)
+            {
+                surface = new BezierSurface();
+                surface.SetPoints(startPoints);
+                startSurfaceGrid = surface.GetSurfaceGridPoints(tolerance, rows, columns);
+                surfaceGridPoints = null;
+                startSurfaceCells.Clear();
+            }
+            var drawGridPoints = Point3Utils.GetObjectProjection(surfaceGridPoints ?? startSurfaceGrid, rect.Width, rect.Height);
+            e.Graphics.DrawGrid(Pens.Black, drawGridPoints);
         }
 
         private void PaintBtn_Click(object sender, EventArgs e)
@@ -234,6 +247,15 @@ namespace GUI.Forms
                 p = p.TurnObject(Point3.Axes.Y, angleY);
                 p = p.TurnObject(Point3.Axes.Z, angleZ);
                 surfaceGridPoints = p.Select(row => row.ToList()).ToList();
+            }
+
+            if(startSurfaceCells != null && startSurfaceCells.Count != 0)
+            {
+                p = startSurfaceCells.Select(cell => cell.ToList());
+                p = p.TurnObject(Point3.Axes.X, angleX);
+                p = p.TurnObject(Point3.Axes.Y, angleY);
+                p = p.TurnObject(Point3.Axes.Z, angleZ);
+                surfaceCells = p.Select(cell => SurfaceCell.FromList(cell)).ToList();
             }
         }
 
