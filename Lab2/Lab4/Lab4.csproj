@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{8CDEB8FF-BFDE-4687-BE2B-5B1FDCC83417}</ProjectGuid>
+    <ProjectGuid>{6CDB8D9D-418D-4490-8E90-5F62A5AEBC8D}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>Lab2</RootNamespace>
-    <AssemblyName>Lab2</AssemblyName>
+    <RootNamespace>Lab4</RootNamespace>
+    <AssemblyName>Lab4</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -88,15 +88,24 @@
     <None Include=".gitignore" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Lab2Resources\0points.txt">
+    <Content Include="Lab4Resources\2sections.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Lab2Resources\4points.txt">
+    </Content>
+    <Content Include="Lab4Resources\3window.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Lab2Resources\6points.txt">
+    </Content>
+    <Content Include="Lab4Resources\4sections.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
+    </Content>
+    <Content Include="Lab4Resources\5window.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Lab4Resources\7sections.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Lab4Resources\8window.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Framework\Framework.csproj">

@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{8CDEB8FF-BFDE-4687-BE2B-5B1FDCC83417}</ProjectGuid>
+    <ProjectGuid>{BD7FC812-E3AB-44F8-878A-B395B935AF50}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>Lab2</RootNamespace>
-    <AssemblyName>Lab2</AssemblyName>
+    <RootNamespace>Lab5</RootNamespace>
+    <AssemblyName>Lab5</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -88,13 +88,13 @@
     <None Include=".gitignore" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Lab2Resources\0points.txt">
+    <EmbeddedResource Include="Lab5Resources\0points.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="Lab2Resources\4points.txt">
+    <EmbeddedResource Include="Lab5Resources\4points.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="Lab2Resources\6points.txt">
+    <EmbeddedResource Include="Lab5Resources\6points.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
   </ItemGroup>

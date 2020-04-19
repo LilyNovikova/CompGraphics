@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{8CDEB8FF-BFDE-4687-BE2B-5B1FDCC83417}</ProjectGuid>
+    <ProjectGuid>{FD3FF3C6-E419-4B1E-B57B-5FD60ED9DDFA}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>Lab2</RootNamespace>
-    <AssemblyName>Lab2</AssemblyName>
+    <RootNamespace>MainForm</RootNamespace>
+    <AssemblyName>MainForm</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -33,9 +33,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -49,16 +46,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Forms\DrawForm.cs">
+    <Compile Include="Forms\OpenLabsForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\DrawForm.Designer.cs">
-      <DependentUpon>DrawForm.cs</DependentUpon>
+    <Compile Include="Forms\OpenLabsForm.Designer.cs">
+      <DependentUpon>OpenLabsForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Main\Run.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="Forms\DrawForm.resx">
-      <DependentUpon>DrawForm.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\OpenLabsForm.resx">
+      <DependentUpon>OpenLabsForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -68,9 +65,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
-      <DesignTime>True</DesignTime>
     </Compile>
-    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -85,23 +80,25 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include=".gitignore" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Lab2Resources\0points.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Lab2Resources\4points.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Lab2Resources\6points.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Framework\Framework.csproj">
-      <Project>{20005498-91d9-45c3-a7b6-8712616d8f33}</Project>
-      <Name>Framework</Name>
+    <ProjectReference Include="..\Lab1\Lab1.csproj">
+      <Project>{17b40cfc-beb4-4452-88e8-cf1b23a40817}</Project>
+      <Name>Lab1</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lab2\Lab2.csproj">
+      <Project>{8cdeb8ff-bfde-4687-be2b-5b1fdcc83417}</Project>
+      <Name>Lab2</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lab3\Lab3.csproj">
+      <Project>{5508ac9f-f670-43ff-83b8-c0fef3a2d73a}</Project>
+      <Name>Lab3</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lab4\Lab4.csproj">
+      <Project>{6cdb8d9d-418d-4490-8e90-5f62a5aebc8d}</Project>
+      <Name>Lab4</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lab5\Lab5.csproj">
+      <Project>{bd7fc812-e3ab-44f8-878a-b395b935af50}</Project>
+      <Name>Lab5</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
