@@ -136,7 +136,7 @@ namespace GUI.Forms
         private void DrawCells(Rectangle rect, Graphics g)
         {
             var innerBrush = Brushes.Cyan;
-            var outerBrush = Brushes.Red;
+            var outerBrush = Brushes.DarkOrchid;
 
             if (startSurfaceCells.Count == 0)
             {
@@ -146,20 +146,7 @@ namespace GUI.Forms
                 surfaceCells = null;
             }
             var check = startSurfaceCells;
-            var inner = (surfaceCells ?? startSurfaceCells).Where(cell => !cell.IsFront);
-            var outer = (surfaceCells ?? startSurfaceCells).Where(cell => cell.IsFront);
             var ordered = (surfaceCells ?? startSurfaceCells).OrderByDescending(cell => cell.FurthestDistance);
-            /* foreach (SurfaceCell cell in inner)
-             {
-                 var drawPoints = Point3Utils.GetCurveProjection(cell.ToList(), rect.Width, rect.Height).ToArray();
-                 g.FillPolygon(innerBrush, drawPoints);
-             }
-
-             foreach (SurfaceCell cell in outer)
-             {
-                 var drawPoints = Point3Utils.GetCurveProjection(cell.ToList(), rect.Width, rect.Height).ToArray();
-                 g.FillPolygon(outerBrush, drawPoints);
-             }*/
 
             foreach (SurfaceCell cell in ordered)
             {
