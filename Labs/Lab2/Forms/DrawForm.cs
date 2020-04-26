@@ -133,10 +133,12 @@ namespace Lab2.Forms
             curve.AddPoints(points);
 
             var curvePoints = curve.GetCurvePoints(0.0001);
-
+            var startDrawingPoints = points.Select(p => p.GetDrawingPoint(field.Width, field.Height)).ToArray();
+            g.DrawLines(Pens.Black, startDrawingPoints);
+            g.DrawPoints(Brushes.Black, startDrawingPoints, pointRadius);
             foreach (Point3 p in points)
             {
-                g.FillEllipse(Brushes.Black, p.GetDrawingPoint(field.Width, field.Height), pointRadius);
+                //g.FillEllipse(Brushes.Black, p.GetDrawingPoint(field.Width, field.Height), pointRadius);
                 g.DrawString($"{points.IndexOf(p)}", SystemFonts.CaptionFont, Brushes.Black, p.GetDrawingPoint(field.Width, field.Height));
             }
             var projection = (curvePoints as IEnumerable<Point3>).GetCurveProjection(field.Width, field.Height);

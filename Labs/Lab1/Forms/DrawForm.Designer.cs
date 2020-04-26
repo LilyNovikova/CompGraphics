@@ -249,10 +249,10 @@
             this.SideLbl.TabIndex = 17;
             this.SideLbl.Text = "left side";
             // 
-            // label7
+            // WarningLbl
             // 
             this.WarningLbl.Location = new System.Drawing.Point(499, 45);
-            this.WarningLbl.Name = "label7";
+            this.WarningLbl.Name = "WarningLbl";
             this.WarningLbl.Size = new System.Drawing.Size(237, 59);
             this.WarningLbl.TabIndex = 18;
             // 
@@ -278,7 +278,7 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.DrawTangentBtn);
             this.Name = "DrawForm";
-            this.Text = "Form1";
+            this.Text = "Lab1";
             ((System.ComponentModel.ISupportInitialize)(this.pointAXUpdn)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pointAYUpdn)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.radiusAUpdn)).EndInit();

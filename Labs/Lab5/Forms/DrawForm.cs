@@ -128,7 +128,7 @@ namespace Lab5.Forms
             e.Graphics.DrawPoints(Brushes.Black, basePointsArray, pointRadius);
 
             DrawCells(rect, e.Graphics);
-            DrawGrid(rect, e.Graphics);
+           // DrawGrid(rect, e.Graphics);
         }
 
         private void DrawCells(Rectangle rect, Graphics g)
@@ -150,6 +150,7 @@ namespace Lab5.Forms
             {
                 var drawPoints = Point3Utils.GetCurveProjection(cell.ToList(), rect.Width, rect.Height).ToArray();
                 g.FillPolygon(cell.IsFront ? outerBrush : innerBrush, drawPoints);
+                g.DrawLines(new Pen(cell.IsFront ? innerBrush : outerBrush, 1), Point3Utils.GetCurveProjection(cell.ToList(), rect.Width, rect.Height).ToArray());
             }
         }
 

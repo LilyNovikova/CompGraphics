@@ -116,7 +116,7 @@
             this.Controls.Add(this.HighlightVisibleBtn);
             this.Controls.Add(this.Canvas);
             this.Name = "DrawForm";
-            this.Text = "DrawForm";
+            this.Text = "Lab4";
             this.Load += new System.EventHandler(this.DrawForm_Load);
             this.ResizeEnd += new System.EventHandler(this.DrawForm_ResizeEnd);
             ((System.ComponentModel.ISupportInitialize)(this.Canvas)).EndInit();

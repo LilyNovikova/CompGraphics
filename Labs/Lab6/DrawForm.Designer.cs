@@ -1,4 +1,4 @@
-﻿namespace Lab3.Forms
+﻿namespace Lab6.Forms
 {
     partial class DrawForm
     {
@@ -236,7 +236,7 @@
             this.Controls.Add(this.PaintBtn);
             this.Controls.Add(this.Canvas);
             this.Name = "DrawForm";
-            this.Text = "DrawForm";
+            this.Text = "Lab6";
             this.Load += new System.EventHandler(this.DrawForm_Load);
             this.ResizeEnd += new System.EventHandler(this.DrawForm_ResizeEnd);
             ((System.ComponentModel.ISupportInitialize)(this.Canvas)).EndInit();
@@ -269,4 +269,3 @@
         private System.Windows.Forms.Label label4;
     }
 }
-

@@ -1,4 +1,4 @@
-﻿namespace Lab5.Forms
+﻿namespace Lab2.Forms
 {
     partial class DrawForm
     {
@@ -30,6 +30,7 @@
         {
             this.Canvas = new System.Windows.Forms.PictureBox();
             this.PaintBtn = new System.Windows.Forms.Button();
+            this.BtflCbx = new System.Windows.Forms.CheckBox();
             this.XTurnTrb = new System.Windows.Forms.TrackBar();
             this.YTurnTrb = new System.Windows.Forms.TrackBar();
             this.ZTurnTrb = new System.Windows.Forms.TrackBar();
@@ -53,8 +54,8 @@
             // 
             // Canvas
             // 
-            this.Canvas.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
+            this.Canvas.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.Canvas.Location = new System.Drawing.Point(12, 177);
             this.Canvas.Name = "Canvas";
@@ -72,6 +73,16 @@
             this.PaintBtn.Text = "Paint";
             this.PaintBtn.UseVisualStyleBackColor = true;
             this.PaintBtn.Click += new System.EventHandler(this.PaintBtn_Click);
+            // 
+            // BtflCbx
+            // 
+            this.BtflCbx.AutoSize = true;
+            this.BtflCbx.Location = new System.Drawing.Point(37, 66);
+            this.BtflCbx.Name = "BtflCbx";
+            this.BtflCbx.Size = new System.Drawing.Size(118, 21);
+            this.BtflCbx.TabIndex = 2;
+            this.BtflCbx.Text = "beautiful draw";
+            this.BtflCbx.UseVisualStyleBackColor = true;
             // 
             // XTurnTrb
             // 
@@ -233,10 +244,11 @@
             this.Controls.Add(this.ZTurnTrb);
             this.Controls.Add(this.YTurnTrb);
             this.Controls.Add(this.XTurnTrb);
+            this.Controls.Add(this.BtflCbx);
             this.Controls.Add(this.PaintBtn);
             this.Controls.Add(this.Canvas);
             this.Name = "DrawForm";
-            this.Text = "DrawForm";
+            this.Text = "Lab2";
             this.Load += new System.EventHandler(this.DrawForm_Load);
             this.ResizeEnd += new System.EventHandler(this.DrawForm_ResizeEnd);
             ((System.ComponentModel.ISupportInitialize)(this.Canvas)).EndInit();
@@ -255,6 +267,7 @@
 
         private System.Windows.Forms.PictureBox Canvas;
         private System.Windows.Forms.Button PaintBtn;
+        private System.Windows.Forms.CheckBox BtflCbx;
         private System.Windows.Forms.TrackBar XTurnTrb;
         private System.Windows.Forms.TrackBar YTurnTrb;
         private System.Windows.Forms.TrackBar ZTurnTrb;
@@ -269,3 +282,4 @@
         private System.Windows.Forms.Label label4;
     }
 }
+

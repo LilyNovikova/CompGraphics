@@ -1,4 +1,4 @@
-﻿namespace Lab6.Forms
+﻿namespace Lab5.Forms
 {
     partial class DrawForm
     {
@@ -53,8 +53,8 @@
             // 
             // Canvas
             // 
-            this.Canvas.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
+            this.Canvas.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.Canvas.Location = new System.Drawing.Point(12, 177);
             this.Canvas.Name = "Canvas";
@@ -236,7 +236,7 @@
             this.Controls.Add(this.PaintBtn);
             this.Controls.Add(this.Canvas);
             this.Name = "DrawForm";
-            this.Text = "DrawForm";
+            this.Text = "Lab5";
             this.Load += new System.EventHandler(this.DrawForm_Load);
             this.ResizeEnd += new System.EventHandler(this.DrawForm_ResizeEnd);
             ((System.ComponentModel.ISupportInitialize)(this.Canvas)).EndInit();

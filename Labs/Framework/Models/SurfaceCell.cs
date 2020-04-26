@@ -26,19 +26,6 @@ namespace Framework.Models
         {
             get
             {
-                /*var dirY1 = A1.GetDrawingPoint().Y - B1.GetDrawingPoint().Y;
-                var dirY2 = A2.GetDrawingPoint().Y - B2.GetDrawingPoint().Y;
-                var dirX1 = A1.GetDrawingPoint().X - B1.GetDrawingPoint().X;
-                var dirX2 = A2.GetDrawingPoint().X - B2.GetDrawingPoint().X;
-                if (dirY1 < 0 && dirY2 < 0)
-                {
-                    return true;
-                }
-                if (dirY1 > 0 && dirY2 > 0)
-                {
-                    return false;
-                }
-                throw new Exception($"Grid cell is invalid. Dir1 {dirY1}; dir2 {dirY2}");*/
                 var distanceBegin = Normal.A.Distance(Const.ViewPoint);
                 var distanceEnd = Normal.B.Distance(Const.ViewPoint);
                 if (distanceBegin >= distanceEnd)
