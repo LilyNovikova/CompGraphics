@@ -75,9 +75,32 @@ namespace Framework.Models
 
         public Point3 GetVFunc(double t) => A + t * (B - A);
 
+        public bool IsPointOnSection(Point3 point)
+        {
+            var sum1 = point - A;
+            var sum2 = B - A;
+            if (sum1.X >= 0 && sum1.Y >= 0 && sum1.Z >= 0)
+            {
+                if (sum1.X <= sum2.X && sum1.Y <= sum2.Y && sum1.Z <= sum2.Z)
+                    return true;
+            }
+            return false;
+        }
+
         public override string ToString()
         {
             return $"{A}; {B}";
+        }
+
+        public override bool Equals(object obj)
+        {
+            var s = obj as Section;
+            if(s == null)
+            {
+                return false;
+            }
+            return s.A == A && s.B == B
+                || s.A == B && s.B == A;
         }
     }
 }

@@ -128,7 +128,7 @@ namespace Lab5.Forms
             e.Graphics.DrawPoints(Brushes.Black, basePointsArray, pointRadius);
 
             DrawCells(rect, e.Graphics);
-           // DrawGrid(rect, e.Graphics);
+            // DrawGrid(rect, e.Graphics);
         }
 
         private void DrawCells(Rectangle rect, Graphics g)
@@ -144,7 +144,7 @@ namespace Lab5.Forms
                 surfaceCells = null;
             }
             var check = startSurfaceCells;
-            var ordered = (surfaceCells ?? startSurfaceCells).OrderByDescending(cell => cell.FurthestDistance);
+            var ordered = (surfaceCells ?? startSurfaceCells).OrderByDescending(cell => cell.FurthestDistance());
 
             foreach (SurfaceCell cell in ordered)
             {

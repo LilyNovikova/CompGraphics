@@ -29,6 +29,12 @@ namespace Framework.Models
             Z = z;
         }
 
+        public Point3(Point point)
+        {
+            X = point.X;
+            Y = point.Y;
+        }
+
         public Point3(int x, int y, int z = 0) : this((double)x, (double)y, (double)z) { }
 
         public override string ToString()
@@ -58,6 +64,17 @@ namespace Framework.Models
                 screenWidth / 2 + GetPlainXCoordinate(),
                 screenHeight / 2 + GetPlainYCoordinate()
                 );
+        }
+
+        public static Point3 TurnToPoint(Point3 turnPoint, Point3 destPoint, Point3 curPoint)
+        {
+            var xAngle = Math.Atan(destPoint.Y / destPoint.Z) - Math.Atan(curPoint.Y / curPoint.Z);
+            var yAngle = Math.Atan(destPoint.Z / destPoint.X) - Math.Atan(curPoint.Z / curPoint.X);
+            var zAngle = Math.Atan(destPoint.X / destPoint.Y) - Math.Atan(curPoint.X / curPoint.Y);
+            var newPoint = turnPoint.TurnAroundAxis(Axes.X, xAngle);
+            newPoint = newPoint.TurnAroundAxis(Axes.Y, yAngle);
+            newPoint = newPoint.TurnAroundAxis(Axes.Z, zAngle);
+            return newPoint;
         }
 
         public static Point3 operator *(double alpha, Point3 point)
@@ -126,6 +143,16 @@ namespace Framework.Models
                 );
         }
 
+        public override bool Equals(object obj)
+        {
+            var p = obj as Point3;
+            if (p == null)
+            {
+                return false;
+            }
+            else return p.X == X && p.Y == Y && p.Z == Z;
+        }
+
         private int GetPlainXCoordinate()
         {
             return (int)Math.Round(Math.Sin(Math.PI / 3) * (Y - X));
@@ -134,5 +161,6 @@ namespace Framework.Models
         {
             return (int)Math.Round(-Z + Math.Cos(Math.PI / 3) * (X + Y));
         }
+
     }
 }

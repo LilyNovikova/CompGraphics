@@ -54,6 +54,7 @@
     <Compile Include="Models\Polygon.cs" />
     <Compile Include="Models\Section.cs" />
     <Compile Include="Models\Section2D.cs" />
+    <Compile Include="Models\ShadowCell.cs" />
     <Compile Include="Models\SurfaceCell.cs" />
     <Compile Include="Models\Window.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -37,7 +37,7 @@ namespace MainForm.Forms
 
         private void Lab6Btn_Click(object sender, EventArgs e)
         {
-
+            new Lab6.Forms.DrawForm().ShowDialog();
         }
     }
 }

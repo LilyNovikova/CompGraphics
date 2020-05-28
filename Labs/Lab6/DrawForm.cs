@@ -1,6 +1,5 @@
 ﻿using Framework.Models;
 using Framework.Utils;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -8,6 +7,8 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using Newtonsoft.Json;
+using OpenGL;
 
 namespace Lab6.Forms
 {
@@ -20,8 +21,8 @@ namespace Lab6.Forms
         private const int pointRadius = 2;
         private BezierSurface surface;
         private double tolerance = 0.05;
-        private int rows = 100;
-        private int columns = 100;
+        private int rows = 20;
+        private int columns = 20;
         private List<List<Point3>> points;
         private List<List<Point3>> startPoints;
         private List<List<Point3>> startSurfaceGrid;
@@ -33,7 +34,7 @@ namespace Lab6.Forms
         public DrawForm()
         {
             InitializeComponent();
-            inputFileCmb.SelectedItem = inputFileCmb.Items[1];
+            inputFileCmb.SelectedItem = inputFileCmb.Items[2];
             SetPoints();
             coordinates = new Coordinates3D(Canvas.Size.Width, Canvas.Size.Height);
             surface = new BezierSurface();
@@ -42,6 +43,9 @@ namespace Lab6.Forms
             surface.SetPoints(points);
             SavePoints(pointsFilename);
             startSurfaceGrid.Clear();
+            LightXUdn.Value = (decimal)Math.Round(Const.LightPoint.X);
+            LightYUdn.Value = (decimal)Math.Round(Const.LightPoint.Y);
+            LightZUdn.Value = (decimal)Math.Round(Const.LightPoint.Z);
             //inputFileCmb.Enabled = false;
         }
 
@@ -134,7 +138,9 @@ namespace Lab6.Forms
         private void DrawCells(Rectangle rect, Graphics g)
         {
             var innerBrush = Brushes.Cyan;
-            var outerBrush = Brushes.DarkOrchid;
+            var innerHiddenBrush = Brushes.DarkCyan;
+            var outerBrush = Brushes.Orchid;
+            var outerHiddenBrush = Brushes.DarkOrchid;
 
             if (startSurfaceCells.Count == 0)
             {
@@ -144,12 +150,38 @@ namespace Lab6.Forms
                 surfaceCells = null;
             }
             var check = startSurfaceCells;
-            var ordered = (surfaceCells ?? startSurfaceCells).OrderByDescending(cell => cell.FurthestDistance);
+            var ordered = (surfaceCells ?? startSurfaceCells).OrderByDescending(cell => cell.FurthestDistance());
+            var sCells = ordered.Select(c => new ShadowCell { Cell = c }).ToList();
 
-            foreach (SurfaceCell cell in ordered)
+            for (var i = 0; i < sCells.Count; i++)
             {
+                for (var j = i + 1; j < sCells.Count; j++)
+                {
+                    if (!sCells[i].IsHidden && !sCells[j].IsHidden)
+                    {
+                        if (sCells[i].Cell.IsHiddenBy(sCells[j].Cell))
+                        {
+                            sCells[i].IsHidden = true;
+                        }
+                    }
+                }
+            }
+
+            foreach (ShadowCell sCell in sCells)
+            {
+                var cell = sCell.Cell;
                 var drawPoints = Point3Utils.GetCurveProjection(cell.ToList(), rect.Width, rect.Height).ToArray();
-                g.FillPolygon(cell.IsFront ? outerBrush : innerBrush, drawPoints);
+                var isHidden = sCell.IsHidden;
+                var isFront = cell.IsFront;
+                var isFrontLight = cell.IsFrontLight;
+                if (cell.IsFront)
+                {
+                    g.FillPolygon(!isHidden && isFrontLight ? outerBrush : outerHiddenBrush, drawPoints);
+                }
+                else
+                {
+                    g.FillPolygon(!isHidden && !isFrontLight ? innerBrush : innerHiddenBrush, drawPoints);
+                }
             }
         }
 
@@ -326,6 +358,24 @@ namespace Lab6.Forms
             }
             surfaceGridPoints = null;
             DrawForm_ResizeEnd(sender, e);
+        }
+
+        private void LightXUdn_ValueChanged(object sender, EventArgs e)
+        {
+            Const.LightPoint = new Point3((double)LightXUdn.Value, Const.LightPoint.Y, Const.LightPoint.Z);
+            Canvas.Refresh();
+        }
+
+        private void LightYUdn_ValueChanged(object sender, EventArgs e)
+        {
+            Const.LightPoint = new Point3(Const.LightPoint.X, (double)LightYUdn.Value, Const.LightPoint.Z);
+            Canvas.Refresh();
+        }
+
+        private void LightZUdn_ValueChanged(object sender, EventArgs e)
+        {
+            Const.LightPoint = new Point3(Const.LightPoint.X, Const.LightPoint.Y, (double)LightZUdn.Value);
+            Canvas.Refresh();
         }
     }
 }

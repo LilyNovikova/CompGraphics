@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http.Headers;
 
 namespace Framework.Models
 {
@@ -110,6 +112,121 @@ namespace Framework.Models
                 }
             }
             return default;
+
+        }
+
+        public Polygon GetVisiblePart(Polygon polygon, double tolerance = 0)
+        {
+            var visible = polygon.Boundaries.Where(b => GetVisiblePart(b, tolerance) != default(Section)).ToList();
+            if (visible.Count == 0)
+            {
+                return default;
+            }
+            var newPolygon = new List<Section>();
+            var IsVisiblePartEndFound = false;
+            int VisPartEndIndex = -1;
+            for (var i = 1; i < visible.Count; i++)
+            {
+                var s1 = visible[i - 1];
+                var s2 = visible[i];
+                if (!s1.B.Equals(s2.A))
+                {
+                    IsVisiblePartEndFound = true;
+                    VisPartEndIndex = visible.IndexOf(s1);
+                }
+            }
+            //соединяем отрезки в единую ломаную
+            if (VisPartEndIndex != -1)
+            {
+                for (var i = VisPartEndIndex + 1; i < visible.Count; i++)
+                {
+                    newPolygon.Add(visible[i]);
+                }
+                for (var i = 0; i < VisPartEndIndex + 1; i++)
+                {
+                    newPolygon.Add(visible[i]);
+                }
+            }
+            //добавляем часть окна, чтобы образовать многоугольник, который видим в окне
+            //находим отрезки с точками пересечения
+            var intersection1 = Boundaries.Where(b => b.IsPointOnSection(newPolygon.First().A)).First();
+            var intersection2 = Boundaries.Where(b => b.IsPointOnSection(newPolygon.Last().B)).First();
+
+            //находим номера этих отрезков
+            var index1 = Boundaries.IndexOf(intersection1);
+            var index2 = Boundaries.IndexOf(intersection2);
+
+            //берём 2 ломаных окна 
+            var IsFirstGreater = index1 > index2;
+            var max = Math.Max(index1, index2);
+            var min = Math.Min(index1, index2);
+
+            var listIn = Boundaries.Where(b =>
+             {
+                 var num = Boundaries.IndexOf(b);
+                 if (num < min || num > max)
+                 {
+                     return false;
+                 }
+                 return true;
+             }).ToList();
+
+            var listOut = Boundaries.Where(b =>
+            {
+                var num = Boundaries.IndexOf(b);
+                if (num >= max)
+                {
+                    return true;
+                }
+                return false;
+            }).ToList();
+            for (var i = 0; i <= index1; i++)
+            {
+                listOut.Add(Boundaries[i]);
+            }
+
+            var polyIn = GetJoinedList(listIn);
+            var polyOut = GetJoinedList(listOut);
+
+            return new Polygon(polyIn).Convexity != 0 ? new Polygon(polyIn) : new Polygon(polyOut);
+
+            //соединяем многоугольник с окном
+            List<Section> GetJoinedList(List<Section> windowPart)
+            {
+                //listIn
+                var newList = windowPart.Where(i => true).ToList();
+                Section connectionB = null;
+                Section connectionA = null;
+                if (windowPart.Last().IsPointOnSection(newPolygon.Last().B))
+                {
+                    connectionB = new Section(windowPart.Last().A, newPolygon.Last().B);
+                    connectionA = new Section(newPolygon.First().B, windowPart.First().A);
+                    newList.RemoveAt(listIn.Count - 1);
+                    newList.Add(connectionB);
+                    for (var i = newPolygon.Count - 1; i >= 0; i--)
+                    {
+                        var section = new Section(newPolygon[i].B, newPolygon[i].A);
+                        newList.Add(section);
+                    }
+                    newList.Add(connectionA);
+                }
+                else
+                {
+                    connectionB = new Section(windowPart.Last().B, newPolygon.Last().B);
+                    connectionA = new Section(newPolygon.First().A, windowPart.First().A);
+                    newList.RemoveAt(listIn.Count - 1);
+                    newList.Add(connectionB);
+                    for (var i = 0; i < newPolygon.Count; i++)
+                    {
+                        var section = new Section(newPolygon[i].B, newPolygon[i].A);
+                        newList.Add(section);
+                    }
+                    newList.Add(connectionA);
+                }
+                return newList;
+            }
+
+
 
         }
 

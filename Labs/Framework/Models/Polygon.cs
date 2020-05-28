@@ -25,6 +25,31 @@ namespace Framework.Models
             Boundaries.Add(new Section(Points.Last(), Points.First()));
         }
 
+        public Polygon(List<Section> boundaries)
+        {
+            if (boundaries.Count < 3)
+            {
+                throw new ArgumentException("More points required. It is not a polygon");
+            }
+            for (int i = 0; i < Boundaries.Count-1; i++)
+            {
+                if(!Boundaries[i].B.Equals(Boundaries[i+1].A))
+                {
+                    throw new ArgumentException("Boundaries doesn't match. It is not a polygon");
+                }
+            }
+            if (!Boundaries.Last().B.Equals(Boundaries.First().A))
+            {
+                throw new ArgumentException("Boundaries doesn't match. It is not a polygon");
+            }
+            Boundaries = boundaries;
+            Points = new List<Point3>();
+            for (int i = 0; i < Boundaries.Count; i++)
+            {
+                Points.Add(Boundaries[i].A);
+            }
+        }
+
         public double Convexity
         {
             get
